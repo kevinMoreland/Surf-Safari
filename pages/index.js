@@ -27,10 +27,12 @@ export default function Home() {
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.flexContainer}>
-        <div id="my-map" className={styles.fillingDiv}/>
-      </main>
+      <div className={styles.overlapContainer}>
+        <main className={styles.flexContainer}>
+          <div id="my-map" className={styles.mapContainer}/>
+        </main>
+        <button className={styles.test}>Switch Map</button>
+      </div>
     </div>
   )
 }
