@@ -17,6 +17,6 @@
 .test {
   position: absolute;
   z-index: 1;
-  left: 10px;
-  bottom: 10px;
+  left: 30px;
+  bottom: 30px;
 }
