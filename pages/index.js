@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styles from '../styles/Home.module.css'
 import useSWR from "swr";
 import { addDataLayer } from "../map/addDataLayer";
-import { initializeMap } from "../map/initializeMap";
+import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
@@ -26,14 +26,6 @@ export default function Home() {
       center: [-77.02, 38.887],
       zoom: 1,
     });
-    map.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-      })
-    );
     initializeMap(mapboxgl, map, mapStyle);
     setMap(map);
   }, []);
@@ -52,13 +44,19 @@ export default function Home() {
     else if(mapStyle == outdoorsMap) {
       setMapStyle(satMap);
     }
-    initializeMap(mapboxgl, Map, mapStyle);
+    changeMapStyle(Map, mapStyle);
   }
   return (
+  //TODO: on start, get browser data to see if login saved. Login user if so, go straight to map
     <div>
       <Head>
         <title>Create Next App</title>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
+        <link
+          rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+          type="text/css"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.overlapContainer}>

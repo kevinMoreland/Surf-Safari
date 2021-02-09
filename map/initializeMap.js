@@ -1,4 +1,10 @@
-export function initializeMap(mapboxgl, map, mapStyle) {
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+
+function changeMapStyle(map, mapStyle) {
+  map.setStyle(mapStyle);
+}
+
+function initializeMap(mapboxgl, map, mapStyle) {
   map.setStyle(mapStyle);
   map.on("click", "data", function (e) {
     var features = map.queryRenderedFeatures(e.point, {
@@ -34,13 +40,23 @@ export function initializeMap(mapboxgl, map, mapStyle) {
       .addTo(map);
   });
   map.addControl(
-    new mapboxgl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      trackUserLocation: true,
-    })
-  );
+    new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl
+     })
+   );
+   map.addControl(
+     new mapboxgl.GeolocateControl({
+       positionOptions: {
+         enableHighAccuracy: true,
+       },
+       trackUserLocation: true,
+     })
+   );
+//  map.on("click", function(e) {
+//    TODO: on click, open my options dialog box for saving a point, etc
+//    alert("test");
+//  });
 
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
@@ -48,4 +64,9 @@ export function initializeMap(mapboxgl, map, mapStyle) {
   map.on("mouseleave", "data", function () {
     map.getCanvas().style.cursor = "";
   });
+}
+
+module.exports = {
+  changeMapStyle,
+  initializeMap
 }
