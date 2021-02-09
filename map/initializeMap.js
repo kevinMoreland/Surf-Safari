@@ -5,7 +5,10 @@ function changeMapStyle(map, mapStyle) {
 }
 
 function initializeMap(mapboxgl, map, mapStyle) {
+  //initialize style
   map.setStyle(mapStyle);
+
+  //Add click events
   map.on("click", "data", function (e) {
     var features = map.queryRenderedFeatures(e.point, {
       layers: ["data"],
@@ -21,7 +24,6 @@ function initializeMap(mapboxgl, map, mapStyle) {
         });
       });
   });
-
   map.on("click", "unclustered-point", function (e) {
     var coordinates = e.features[0].geometry.coordinates.slice();
     var mag = e.features[0].properties.mag;
@@ -39,31 +41,35 @@ function initializeMap(mapboxgl, map, mapStyle) {
       .setHTML("magnitude: " + mag + "<br>Was there a tsunami?: " + tsunami)
       .addTo(map);
   });
-  map.addControl(
-    new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl
-     })
-   );
-   map.addControl(
-     new mapboxgl.GeolocateControl({
-       positionOptions: {
-         enableHighAccuracy: true,
-       },
-       trackUserLocation: true,
-     })
-   );
-//  map.on("click", function(e) {
-//    TODO: on click, open my options dialog box for saving a point, etc
-//    alert("test");
-//  });
-
+  map.on("click", function(e) {
+    var coordinates = e.lngLat;
+    new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setHTML("<button>ThisIsTest1</button><br><button>ThisIsTest2</button>")
+      .addTo(map);
+  });
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
   });
   map.on("mouseleave", "data", function () {
     map.getCanvas().style.cursor = "";
   });
+
+  //Add controllers
+  map.addControl(
+    new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl
+     })
+   );
+  map.addControl(
+   new mapboxgl.GeolocateControl({
+     positionOptions: {
+       enableHighAccuracy: true,
+     },
+     trackUserLocation: true,
+   })
+  );
 }
 
 module.exports = {
