@@ -1,13 +1,25 @@
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import ReactDOM from 'react-dom'
+import ClickMenu from '../components/ClickMenu/ClickMenu.js';
+import jsxToString from 'jsx-to-string';
 
+let sideBarToggleFunction = null;
 function changeMapStyle(map, mapStyle) {
   map.setStyle(mapStyle);
 }
+function addPopup(map, el, coordinates) {
+    const placeholder = document.createElement('div');
+    ReactDOM.render(el, placeholder);
 
-function initializeMap(mapboxgl, map, mapStyle) {
+    new MapboxGl.Popup()
+      .setDOMContent(placeholder)
+      .setLngLat(coordinates)
+      .addTo(map);
+}
+function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
   //initialize style
   map.setStyle(mapStyle);
-
+  sideBarToggleFunction = toggleSideBar;
   //Add click events
   map.on("click", "data", function (e) {
     var features = map.queryRenderedFeatures(e.point, {
@@ -36,16 +48,19 @@ function initializeMap(mapboxgl, map, mapStyle) {
     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
-    new mapboxgl.Popup()
-      .setLngLat(coordinates)
-      .setHTML("magnitude: " + mag + "<br>Was there a tsunami?: " + tsunami)
-      .addTo(map);
+    addPopup(map, <ClickMenu />, coordinates);
+//    new mapboxgl.Popup()
+//      .setLngLat(coordinates)
+//      .setHTML("magnitude: " + mag + "<br>Was there a tsunami?: " + tsunami)
+//      .addTo(map);
   });
   map.on("click", function(e) {
     var coordinates = e.lngLat;
+    let placeholder = document.createElement("div");
+    ReactDOM.render(<ClickMenu toggleSideBar={sideBarToggleFunction}/>, placeholder);
     new mapboxgl.Popup()
       .setLngLat(coordinates)
-      .setHTML("<button>ThisIsTest1</button><br><button>ThisIsTest2</button>")
+      .setDOMContent(placeholder)
       .addTo(map);
   });
   map.on("mouseenter", "data", function () {
