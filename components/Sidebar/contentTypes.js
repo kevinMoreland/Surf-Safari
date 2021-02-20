@@ -1,0 +1,1 @@
+export default {FORECAST: "forecast", SPOT_INFO: "spotInfo"}

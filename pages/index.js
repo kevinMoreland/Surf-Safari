@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import styles from '../styles/Home.module.css'
 import useSWR from "swr";
 import Sidebar from "../components/Sidebar/Sidebar.js"
+import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import { addDataLayer } from "../map/addDataLayer";
 import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
+import contentTypes from '../components/Sidebar/contentTypes.js'
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
@@ -15,6 +17,8 @@ export default function Home() {
   const [Map, setMap] = useState();
   const satMap = "mapbox://styles/mapbox/satellite-v9";
   const outdoorsMap = "mapbox://styles/mapbox/outdoors-v11";
+  const surfMap = "mapbox://styles/mapbox/streets-v11"
+  const availableMaps = [satMap, outdoorsMap, surfMap]
   const [mapStyle, setMapStyle] = useState(outdoorsMap);
   const { data, error } = useSWR("/api/testAPI", fetcher);
   const [sideBarIsActive, setSideBarActive] = useState(false);
@@ -24,15 +28,14 @@ export default function Home() {
   function toggleSideBar() {
     setSideBarActive(sideBarIsActive => !sideBarIsActive);
   }
-  function toggleMap() {
-    if(mapStyle == satMap) {
-      setMapStyle(outdoorsMap);
-    }
-    else if(mapStyle == outdoorsMap) {
-      setMapStyle(satMap);
-    }
-    changeMapStyle(Map, mapStyle);
+  function toggleMap(newMapStyle) {
+    setMapStyle(newMapStyle);
   }
+  useEffect(() => {
+    if(pageIsMounted){
+      changeMapStyle(Map, mapStyle);
+    }
+  }, [mapStyle])
   useEffect(() => {
     setPageIsMounted(true);
     let map = new mapboxgl.Map({
@@ -68,9 +71,10 @@ export default function Home() {
 
       <Sidebar
         active={sideBarIsActive}
-        title="test"
-        description="this is a test description"
-        onClose={() => alert("Close Sidebar")}
+        title="Ghana Beach Break"
+        description="A great spot with a lot of potential. The lefts look better than the rights, but the spot seems all around good. Is currently receiving a large swell, this should hold at least for another week or so."
+        onClose={() => setSideBarActive(false)}
+        contentType={contentTypes.FORECAST}
         buttons={[{title: "Button 1", action: () => alert("Button 1")},
                   {title: "Button 2", action: () => alert("Button 2")}]}/>
 
@@ -78,7 +82,10 @@ export default function Home() {
         <main className={styles.flexContainer}>
           <div id="my-map" className={styles.mapContainer}/>
         </main>
-        <button onClick={toggleMap} className={styles.test}>Switch Map</button>
+        <div className={styles.test}>
+          <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={0} availableMaps={availableMaps}/>
+          <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={1} availableMaps={availableMaps}/>
+        </div>
       </div>
     </div>
   )

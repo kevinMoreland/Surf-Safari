@@ -4,6 +4,7 @@
   top: 0;
   width: 400px;
   height: 100%;
+  transition: left 1s !important;
 }
 .active {
   left: 0px;
@@ -15,7 +16,6 @@
 .closeButton {
   width: 100%;
   text-align: right;
-  position: absolute;
   padding-top: 24px;
   padding-right: 24px;
   z-index: 3;
@@ -23,6 +23,7 @@
 .closeButton svg {
   cursor: pointer;
 }
+
 .buttons {
   text-align: center;
   position: absolute;

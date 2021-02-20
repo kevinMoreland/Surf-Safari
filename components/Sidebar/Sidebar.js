@@ -4,9 +4,22 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import contentTypes from './contentTypes.js'
+import SurfSpotContent from './SidebarContent/SurfSpotContent/SurfSpotContent.js'
+import ForecastContent from './SidebarContent/ForecastContent/ForecastContent.js'
 import 'fontsource-roboto';
 
+//props.contentType can be "forecast", "spotInfo", "editableSpot"
+//should also accept in long lat, and a function for updating database
 export default function Sidebar(props) {
+  let content = <p>Content not found</p>
+  if(props.contentType == contentTypes.SPOT_INFO) {
+    content = <SurfSpotContent />
+  }
+  else if(props.contentType == contentTypes.FORECAST) {
+    content = <ForecastContent />
+  }
+
   //Careful! the order of the classes specified for <Paper> matters
   return (
     <Paper className={(props.active ? styles.active : styles.inactive) + " " + styles.sidebar}
@@ -16,16 +29,7 @@ export default function Sidebar(props) {
         <CloseIcon onClick={props.onClose} fontSize="large"/>
       </div>
       <div className={styles.content}>
-        <Typography align="center" variant="h3">{props.title}</Typography>
-        <br/>
-        <Typography variant="body1">{props.description}</Typography>
-      </div>
-      <div className={styles.buttons}>
-        {props.buttons.map((button, index) =>
-          <>
-            <Button onClick={button.action} key={index} variant="contained" color="primary">{button.title}</Button>
-          </>
-        )}
+        {content}
       </div>
     </Paper>)
 }
