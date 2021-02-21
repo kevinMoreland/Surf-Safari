@@ -20,6 +20,8 @@ function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
   //initialize style
   map.setStyle(mapStyle);
   sideBarToggleFunction = toggleSideBar;
+  map.touchPitch.disable();
+  map.keyboard.disable();
   //Add click events
   map.on("click", "data", function (e) {
     var features = map.queryRenderedFeatures(e.point, {

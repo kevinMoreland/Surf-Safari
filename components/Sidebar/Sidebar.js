@@ -28,8 +28,6 @@ export default function Sidebar(props) {
       <div className={styles.closeButton}>
         <CloseIcon onClick={props.onClose} fontSize="large"/>
       </div>
-      <div className={styles.content}>
-        {content}
-      </div>
+      {content}
     </Paper>)
 }

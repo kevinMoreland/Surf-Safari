@@ -61,6 +61,7 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
+        <link href='/css/weather-icons-wind.css' rel='stylesheet'/>
         <link
           rel="stylesheet"
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
@@ -74,9 +75,7 @@ export default function Home() {
         title="Ghana Beach Break"
         description="A great spot with a lot of potential. The lefts look better than the rights, but the spot seems all around good. Is currently receiving a large swell, this should hold at least for another week or so."
         onClose={() => setSideBarActive(false)}
-        contentType={contentTypes.FORECAST}
-        buttons={[{title: "Button 1", action: () => alert("Button 1")},
-                  {title: "Button 2", action: () => alert("Button 2")}]}/>
+        contentType={contentTypes.SPOT_INFO}/>
 
       <div className={styles.overlapContainer}>
         <main className={styles.flexContainer}>

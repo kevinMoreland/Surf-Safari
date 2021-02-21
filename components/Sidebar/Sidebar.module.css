@@ -2,8 +2,10 @@
   position: absolute;
   z-index: 2;
   top: 0;
-  width: 400px;
-  height: 100%;
+  width: 26vw;
+  min-width: 250px;
+  height: 100vh;
+  overflow: hidden;
   transition: left 1s !important;
 }
 .active {
@@ -18,7 +20,6 @@
   text-align: right;
   padding-top: 24px;
   padding-right: 24px;
-  z-index: 3;
 }
 .closeButton svg {
   cursor: pointer;
@@ -36,8 +37,16 @@
   padding-left: 100px;
   padding-right: 100px;
 }
-.content {
+.textContent {
   padding-top: 10px;
   padding-left: 24px;
   padding-right: 24px;
+}
+.forecastContent {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 0px;
+  height: 90vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }

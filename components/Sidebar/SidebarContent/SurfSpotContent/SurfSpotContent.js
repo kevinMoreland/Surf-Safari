@@ -10,13 +10,15 @@ import 'fontsource-roboto';
 
 export default function SurfSpotContent(props) {
   return (
-      <>
+      <div className={styles.textContent}>
         <InputBase
           style={{fontSize: 26}}
           id="standard-basic"
           label=""
           placeholder="Title"
-          onChange={()=>console.log("changed Title")}/>
+          onChange={()=>console.log("changed Title")}
+          multiline
+          rowsMax={2}/>
         <br/>
         <br/>
         <InputBase
@@ -25,10 +27,11 @@ export default function SurfSpotContent(props) {
           label=""
           placeholder="Description"
           onChange={()=>console.log("changed Description")}
-          multiline />
+          multiline
+          rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>alert("Deleting or cancelling...")} variant="contained" color="primary">Delete</Button>
         </div>
-      </>)
+      </div>)
 }
