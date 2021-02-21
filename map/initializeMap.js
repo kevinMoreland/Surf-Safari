@@ -16,7 +16,7 @@ function addPopup(map, el, coordinates) {
       .setLngLat(coordinates)
       .addTo(map);
 }
-function initializeMap(mapboxgl, map, mapStyle, setSideBar) {
+function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog) {
   //initialize style
   map.setStyle(mapStyle);
   map.touchPitch.disable();
@@ -55,6 +55,7 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar) {
     var coordinates = e.lngLat;
     let placeholder = document.createElement("div");
     ReactDOM.render(<ClickMenu
+      setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
       setSideBar={(title, description, contentType, isActive) => setSideBar(title, description, contentType, isActive)}/>,
       placeholder);
     new mapboxgl.Popup()

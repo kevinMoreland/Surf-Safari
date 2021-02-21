@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import styles from '../styles/Home.module.css'
 import useSWR from "swr";
 import Sidebar from "../components/Sidebar/Sidebar.js"
+import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js"
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
+import contentTypes from '../components/Sidebar/contentTypes.js'
 import { addDataLayer } from "../map/addDataLayer";
 import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
-import contentTypes from '../components/Sidebar/contentTypes.js'
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
@@ -28,6 +29,9 @@ export default function Home() {
 
   //hook for sidebar info
   const [sideBarInfo, setSideBarInfo] = useState({title: "", description: "", contentType: "", isActive: false});
+
+  //hook for full screen dialog info
+  const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
 
   mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
 
@@ -51,7 +55,11 @@ export default function Home() {
       center: [-77.02, 38.887],
       zoom: 1,
     });
-    initializeMap(mapboxgl, map, mapStyle, (a, b, c, d) => setSideBarInfo({title: a, description: b, contentType: c, isActive: d}));
+    initializeMap(mapboxgl,
+                  map,
+                  mapStyle,
+                  (a, b, c, d) => setSideBarInfo({title: a, description: b, contentType: c, isActive: d}),
+                  (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
     setMap(map);
   }, []);
   useEffect(() => {
@@ -77,6 +85,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <FullScreenDialog
+        contentType={fullScreenDialogInfo.contentType}
+        handleClose={() => setFullScreenDialogInfo({contentType: fullScreenDialogInfo.contentType, isActive: false})}
+        open={fullScreenDialogInfo.isActive}/>
       <Sidebar
         active={sideBarInfo.isActive}
         title={sideBarInfo.title}
