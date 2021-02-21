@@ -2,8 +2,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import ReactDOM from 'react-dom'
 import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
+import contentTypes from '../components/Sidebar/contentTypes.js'
 
-let sideBarToggleFunction = null;
 function changeMapStyle(map, mapStyle) {
   map.setStyle(mapStyle);
 }
@@ -16,10 +16,9 @@ function addPopup(map, el, coordinates) {
       .setLngLat(coordinates)
       .addTo(map);
 }
-function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
+function initializeMap(mapboxgl, map, mapStyle, setSideBar) {
   //initialize style
   map.setStyle(mapStyle);
-  sideBarToggleFunction = toggleSideBar;
   map.touchPitch.disable();
   map.keyboard.disable();
   //Add click events
@@ -51,15 +50,13 @@ function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
     addPopup(map, <ClickMenu />, coordinates);
-//    new mapboxgl.Popup()
-//      .setLngLat(coordinates)
-//      .setHTML("magnitude: " + mag + "<br>Was there a tsunami?: " + tsunami)
-//      .addTo(map);
   });
   map.on("click", function(e) {
     var coordinates = e.lngLat;
     let placeholder = document.createElement("div");
-    ReactDOM.render(<ClickMenu toggleSideBar={sideBarToggleFunction}/>, placeholder);
+    ReactDOM.render(<ClickMenu
+      setSideBar={(title, description, contentType, isActive) => setSideBar(title, description, contentType, isActive)}/>,
+      placeholder);
     new mapboxgl.Popup()
       .setLngLat(coordinates)
       .setDOMContent(placeholder)
@@ -92,7 +89,7 @@ function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
    'top-left'
   );
   //zoom and rotation controls
-  map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 }
 
 module.exports = {

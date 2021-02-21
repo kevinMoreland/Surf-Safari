@@ -14,23 +14,30 @@ const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
+
+  //hook for displaying the correct map. TODO replace surfMap with my perosonalized map
   const [Map, setMap] = useState();
   const satMap = "mapbox://styles/mapbox/satellite-v9";
   const outdoorsMap = "mapbox://styles/mapbox/outdoors-v11";
   const surfMap = "mapbox://styles/mapbox/streets-v11"
   const availableMaps = [satMap, outdoorsMap, surfMap]
   const [mapStyle, setMapStyle] = useState(outdoorsMap);
+
+  //TODO Probably will delete this later, use as example for now
   const { data, error } = useSWR("/api/testAPI", fetcher);
-  const [sideBarIsActive, setSideBarActive] = useState(false);
+
+  //hook for sidebar info
+  const [sideBarInfo, setSideBarInfo] = useState({title: "", description: "", contentType: "", isActive: false});
 
   mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
 
-  function toggleSideBar() {
-    setSideBarActive(sideBarIsActive => !sideBarIsActive);
-  }
   function toggleMap(newMapStyle) {
     setMapStyle(newMapStyle);
   }
+
+  useEffect(() => {
+    console.log(sideBarInfo)
+  }, [sideBarInfo])
   useEffect(() => {
     if(pageIsMounted){
       changeMapStyle(Map, mapStyle);
@@ -44,7 +51,7 @@ export default function Home() {
       center: [-77.02, 38.887],
       zoom: 1,
     });
-    initializeMap(mapboxgl, map, mapStyle, () => {toggleSideBar();});
+    initializeMap(mapboxgl, map, mapStyle, (a, b, c, d) => setSideBarInfo({title: a, description: b, contentType: c, isActive: d}));
     setMap(map);
   }, []);
   useEffect(() => {
@@ -71,11 +78,11 @@ export default function Home() {
       </Head>
 
       <Sidebar
-        active={sideBarIsActive}
-        title="Ghana Beach Break"
-        description="A great spot with a lot of potential. The lefts look better than the rights, but the spot seems all around good. Is currently receiving a large swell, this should hold at least for another week or so."
-        onClose={() => setSideBarActive(false)}
-        contentType={contentTypes.SPOT_INFO}/>
+        active={sideBarInfo.isActive}
+        title={sideBarInfo.title}
+        description={sideBarInfo.description}
+        onClose={() => setSideBarInfo({title: "", description: "", contentType: sideBarInfo.contentType, isActive: false})}
+        contentType={sideBarInfo.contentType}/>
 
       <div className={styles.overlapContainer}>
         <main className={styles.flexContainer}>

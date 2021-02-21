@@ -5,8 +5,6 @@ export default function MiniMapButton(props) {
   let miniMapIndex = props.miniMapIndex
   let i = 0
   while(true) {
-    console.log("mapstyle: " + props.currentMap)
-    console.log("currcheck: " + props.availableMaps[i])
     if(props.currentMap != props.availableMaps[i]) {
       if(miniMapIndex == 0) {
         miniMapStyle = props.availableMaps[i]
