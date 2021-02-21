@@ -73,20 +73,26 @@ function initializeMap(mapboxgl, map, mapStyle, toggleSideBar) {
   });
 
   //Add controllers
+  //location search control
   map.addControl(
     new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl
-     })
+      mapboxgl: mapboxgl,
+     }),
+     'top-left'
    );
+  //current location control
   map.addControl(
    new mapboxgl.GeolocateControl({
      positionOptions: {
        enableHighAccuracy: true,
      },
      trackUserLocation: true,
-   })
+   }),
+   'top-left'
   );
+  //zoom and rotation controls
+  map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 }
 
 module.exports = {
