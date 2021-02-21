@@ -7,7 +7,7 @@ import 'fontsource-roboto';
 export default function CreateAccountContent(props) {
   return (
       <>
-        <DialogTopBar title="Create Account"/>
+        <DialogTopBar title="Create Account" handleClose={props.handleClose}/>
         <p>Create Account</p>
       </>)
 }

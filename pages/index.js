@@ -5,7 +5,8 @@ import useSWR from "swr";
 import Sidebar from "../components/Sidebar/Sidebar.js"
 import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js"
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
-import contentTypes from '../components/Sidebar/contentTypes.js'
+import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
+import ProfileButton from '../components/ProfileButton/ProfileButton.js'
 import { addDataLayer } from "../map/addDataLayer";
 import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
@@ -100,7 +101,11 @@ export default function Home() {
         <main className={styles.flexContainer}>
           <div id="my-map" className={styles.mapContainer}/>
         </main>
-        <div className={styles.test}>
+
+        <div className={styles.profileIconContainer}>
+          <ProfileButton handleClick={() => setFullScreenDialogInfo({contentType: fullScreenDialogContentTypes.LOGIN, isActive: true})}/>
+        </div>
+        <div className={styles.miniMapContainer}>
           <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={0} availableMaps={availableMaps}/>
           <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={1} availableMaps={availableMaps}/>
         </div>

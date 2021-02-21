@@ -13,10 +13,15 @@
   position:absolute;
   width: 100vw;
 }
-
-.test {
+.profileIconContainer {
   position: absolute;
   z-index: 1;
-  left: 30px;
-  bottom: 30px;
+  right: 3vw;
+  top: 3vh;
+}
+.miniMapContainer {
+  position: absolute;
+  z-index: 1;
+  left: 3vw;
+  bottom: 3vh;
 }
