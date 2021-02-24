@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-surfsafari-dev-210839-authRole",
+      "UnauthRoleArn": "arn:aws:iam::443380359026:role/amplify-surfsafari-dev-210839-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::443380359026:role/amplify-surfsafari-dev-210839-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-surfsafari-dev-210839-deployment",
+      "UnauthRoleName": "amplify-surfsafari-dev-210839-unauthRole",
+      "StackName": "amplify-surfsafari-dev-210839",
+      "StackId": "arn:aws:cloudformation:us-west-2:443380359026:stack/amplify-surfsafari-dev-210839/5d43cd20-765e-11eb-9933-02a00b0708a7",
+      "AmplifyAppId": "d35puw83xhohbs"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d35puw83xhohbs",
+          "type": "cicd"
+        }
+      },
+      "auth": {
+        "surfsafaricc1ab66d": {}
+      }
+    }
+  }
+}
