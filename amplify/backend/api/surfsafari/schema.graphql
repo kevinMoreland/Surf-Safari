@@ -1,0 +1,11 @@
+type SurfSpot {
+  long: Float!
+  lat: Float!
+  name: String!
+  description: String!
+}
+
+type User @model {
+  id: ID!
+  surfspots: [SurfSpot!]!
+}
