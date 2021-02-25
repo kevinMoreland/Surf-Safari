@@ -12,6 +12,13 @@ import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 
+//Necessary for AWS Cognito for sign up/ sign in ------
+import { Amplify, Auth } from 'aws-amplify';
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
+//-----------------------------------------------------
+
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
 export default function Home() {
@@ -33,6 +40,17 @@ export default function Home() {
 
   //hook for full screen dialog info
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
+
+  //stuff for login/signup authentication and keeping track of the logged in account
+  const [authState, setAuthState] = useState();
+  const [user, setUser] = useState();
+  useEffect(() => {
+      return onAuthUIStateChange((nextAuthState, authData) => {
+          setAuthState(nextAuthState);
+          setUser(authData)
+      });
+  }, []);
+  //
 
   mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
 
@@ -89,7 +107,10 @@ export default function Home() {
       <FullScreenDialog
         contentType={fullScreenDialogInfo.contentType}
         handleClose={() => setFullScreenDialogInfo({contentType: fullScreenDialogInfo.contentType, isActive: false})}
-        open={fullScreenDialogInfo.isActive}/>
+        open={fullScreenDialogInfo.isActive}
+        authState={authState}
+        user={user}
+        />
       <Sidebar
         active={sideBarInfo.isActive}
         title={sideBarInfo.title}
