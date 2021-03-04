@@ -14,7 +14,7 @@ import 'fontsource-roboto';
 export default function Sidebar(props) {
   let content = <p>Content not found</p>
   if(props.content.contentType == contentTypes.SPOT_INFO) {
-    content = <SurfSpotContent />
+    content = <SurfSpotContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.FORECAST) {
     content = <ForecastContent />

@@ -9,6 +9,7 @@ import { Amplify, Auth} from 'aws-amplify';
 import { API } from "@aws-amplify/api";
 
 export default function SurfSpotContent(props) {
+  console.log(props.content)
   const addSurfSpot = async (event) => {
     event.preventDefault();
     const currentUser = await Auth.currentAuthenticatedUser();
@@ -59,8 +60,8 @@ export default function SurfSpotContent(props) {
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
-          <Button onClick={addSurfSpot} variant="contained" color="primary">Save</Button>
-          <Button onClick={()=>alert("Deleting or cancelling...")} variant="contained" color="primary">Delete</Button>
+          <Button onClick={props.content.addMapMarker} variant="contained" color="primary">Save</Button>
+          <Button onClick={props.content.removeMapMarker} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)
 }

@@ -4,10 +4,11 @@ import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/Surf
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
 
 export default function ClickMenu(props) {
+  //props.addMapMarker();
   return (
     <div className={styles.test}>
       <p onClick={() => props.setSideBar(
-        new SurfSpotContentInput("", "", () => alert("add map marker"), () => alert("remove map marker"), () => alert("update user")),
+        new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user")),
         true)}>
         Save Spot
       </p>

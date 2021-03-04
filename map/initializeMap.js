@@ -20,21 +20,31 @@ function addPopup(map, el, coordinates) {
 
 function removeMapMarker(coordinates) {
   //This ONLY removes from the UI component. Seperately, remove from the DB
-  for(let i = 0; i < len(markers); i++) {
-    markerCoordinates = markers[i].getLngLat();
+  for(let i = 0; i < markers.length; i++) {
+    let markerCoordinates = markers[i].getLngLat();
     if(markerCoordinates.lat == coordinates.lat && markerCoordinates.lng == coordinates.lng) {
       markers[i].remove();
       markers.splice(i, 1);
       break;
     }
   }
+  console.log(markers);
 }
-function addMapMarker(coordinates, map) {
+function addMapMarker(coordinates, map, mapboxgl) {
   //This ONLY adds to the UI. Seperately, add to the DB
-  let newMarker = new mapboxgl.Marker({color: "#FFFFFF", draggable: false})
+
+  //ensure we don't add too markers directly on top of one another
+  for(let i = 0; i < markers.length; i++) {
+    let markerCoordinates = markers[i].getLngLat();
+    if(markerCoordinates.lat == coordinates.lat && markerCoordinates.lng == coordinates.lng) {
+      return;
+    }
+  }
+  let newMarker = new mapboxgl.Marker({color: "#e83e20", draggable: false})
                                       .setLngLat(coordinates)
                                       .addTo(map);
   markers.push(newMarker);
+  console.log(markers);
 }
 
 function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog) {
@@ -49,6 +59,8 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog)
     var coordinates = e.lngLat;
     let placeholder = document.createElement("div");
     ReactDOM.render(<ClickMenu
+      addMapMarker={() => addMapMarker(coordinates, map, mapboxgl)}
+      removeMapMarker={() => removeMapMarker(coordinates)}
       setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
       placeholder);
     new mapboxgl.Popup()
