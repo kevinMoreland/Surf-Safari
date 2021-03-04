@@ -11,18 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: 'relative',
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-}));
-
 export default function FullScreenDialog(props) {
-  const classes = useStyles();
 
   let content = <p>Content not found.</p>
   if(props.contentType == fullscreenDialogContentTypes.SATELLITE) {
