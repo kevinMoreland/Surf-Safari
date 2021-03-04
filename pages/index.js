@@ -41,6 +41,13 @@ export default function Home() {
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
   useEffect(() => {
+      console.log("Auth state set... NOW")
+      if(authState === undefined) {
+        Auth.currentAuthenticatedUser().then(authData => {
+          setAuthState(AuthState.SignedIn);
+          setUser(authData);
+        });
+      }
       return onAuthUIStateChange((nextAuthState, authData) => {
           setAuthState(nextAuthState);
           setUser(authData)
@@ -60,9 +67,6 @@ export default function Home() {
     }
   }, [mapStyle])
 
-  //TODO LEFT OFF HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //TODO I am trying to get the 'save spot' option to appear/disappear on loggin or not logged in,
-  //TODO as well as make it possible to load data in once a user is logged in
   useEffect(() => {
     console.log("auth state is: " + authState)
     if(pageIsMounted) {
