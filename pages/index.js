@@ -7,7 +7,6 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
-import { addDataLayer } from "../map/addDataLayer";
 import { initializeMap, changeMapStyle } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
@@ -81,13 +80,6 @@ export default function Home() {
                   (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
     setMap(map);
   }, []);
-  useEffect(() => {
-      if (pageIsMounted && data) {
-        Map.on("load", function () {
-          addDataLayer(Map, data);
-        });
-      }
-    }, [pageIsMounted, setMap, data, Map]);
 
   return (
   //TODO: on start, get browser data to see if login saved. Login user if so, go straight to map

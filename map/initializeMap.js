@@ -4,6 +4,7 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 
+let markers = []
 function changeMapStyle(map, mapStyle) {
   map.setStyle(mapStyle);
 }
@@ -21,40 +22,15 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog)
   map.setStyle(mapStyle);
   map.touchPitch.disable();
   map.keyboard.disable();
-  //Add click events
-  map.on("click", "data", function (e) {
-    var features = map.queryRenderedFeatures(e.point, {
-      layers: ["data"],
-    });
-    var clusterId = features[0].properties.cluster_id;
-    map
-      .getSource("dcmusic.live")
-      .getClusterExpansionZoom(clusterId, function (err, zoom) {
-        if (err) return;
-        map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom,
-        });
-      });
-  });
-  map.on("click", "unclustered-point", function (e) {
-    var coordinates = e.features[0].geometry.coordinates.slice();
-    var mag = e.features[0].properties.mag;
-    var tsunami;
-    if (e.features[0].properties.tsunami === 1) {
-      tsunami = "yes";
-    } else {
-      tsunami = "no";
-    }
-    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
-    addPopup(map, <ClickMenu />, coordinates);
-  });
+
   map.on("click", function(e) {
     var coordinates = e.lngLat;
     let placeholder = document.createElement("div");
     ReactDOM.render(<ClickMenu
+      addMapMarker={() =>
+        {new mapboxgl.Marker({
+                          color: "#FFFFFF",
+                          draggable: false}).setLngLat(coordinates).addTo(map);}}
       setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
       setSideBar={(title, description, contentType, isActive) => setSideBar(title, description, contentType, isActive)}/>,
       placeholder);
