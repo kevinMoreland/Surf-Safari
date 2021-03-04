@@ -13,10 +13,10 @@ import 'fontsource-roboto';
 //should also accept in long lat, and a function for updating database
 export default function Sidebar(props) {
   let content = <p>Content not found</p>
-  if(props.contentType == contentTypes.SPOT_INFO) {
+  if(props.content.contentType == contentTypes.SPOT_INFO) {
     content = <SurfSpotContent />
   }
-  else if(props.contentType == contentTypes.FORECAST) {
+  else if(props.content.contentType == contentTypes.FORECAST) {
     content = <ForecastContent />
   }
 

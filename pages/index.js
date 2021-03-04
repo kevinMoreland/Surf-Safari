@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import styles from '../styles/Home.module.css'
-import useSWR from "swr";
 import Sidebar from "../components/Sidebar/Sidebar.js"
+
 import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js"
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
@@ -31,11 +31,8 @@ export default function Home() {
   const availableMaps = [satMap, outdoorsMap, surfMap]
   const [mapStyle, setMapStyle] = useState(outdoorsMap);
 
-  //TODO Probably will delete this later, use as example for now
-  const { data, error } = useSWR("/api/testAPI", fetcher);
-
   //hook for sidebar info
-  const [sideBarInfo, setSideBarInfo] = useState({title: "", description: "", contentType: "", isActive: false});
+  const [sideBarInfo, setSideBarInfo] = useState({content: {}, isActive: false});
 
   //hook for full screen dialog info
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
@@ -76,7 +73,7 @@ export default function Home() {
     initializeMap(mapboxgl,
                   map,
                   mapStyle,
-                  (a, b, c, d) => setSideBarInfo({title: a, description: b, contentType: c, isActive: d}),
+                  (c, d) => setSideBarInfo({content: c, isActive: d}),
                   (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
     setMap(map);
   }, []);
@@ -105,10 +102,8 @@ export default function Home() {
         />
       <Sidebar
         active={sideBarInfo.isActive}
-        title={sideBarInfo.title}
-        description={sideBarInfo.description}
-        onClose={() => setSideBarInfo({title: "", description: "", contentType: sideBarInfo.contentType, isActive: false})}
-        contentType={sideBarInfo.contentType}/>
+        content={sideBarInfo.content}
+        onClose={() => setSideBarInfo({content: sideBarInfo.content, isActive: false})}/>
 
       <div className={styles.overlapContainer}>
         <main className={styles.flexContainer}>

@@ -17,7 +17,29 @@ function addPopup(map, el, coordinates) {
       .setLngLat(coordinates)
       .addTo(map);
 }
+
+function removeMapMarker(coordinates) {
+  //This ONLY removes from the UI component. Seperately, remove from the DB
+  for(let i = 0; i < len(markers); i++) {
+    markerCoordinates = markers[i].getLngLat();
+    if(markerCoordinates.lat == coordinates.lat && markerCoordinates.lng == coordinates.lng) {
+      markers[i].remove();
+      markers.splice(i, 1);
+      break;
+    }
+  }
+}
+function addMapMarker(coordinates, map) {
+  //This ONLY adds to the UI. Seperately, add to the DB
+  let newMarker = new mapboxgl.Marker({color: "#FFFFFF", draggable: false})
+                                      .setLngLat(coordinates)
+                                      .addTo(map);
+  markers.push(newMarker);
+}
+
 function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog) {
+  //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
+
   //initialize style
   map.setStyle(mapStyle);
   map.touchPitch.disable();
@@ -27,12 +49,7 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog)
     var coordinates = e.lngLat;
     let placeholder = document.createElement("div");
     ReactDOM.render(<ClickMenu
-      addMapMarker={() =>
-        {new mapboxgl.Marker({
-                          color: "#FFFFFF",
-                          draggable: false}).setLngLat(coordinates).addTo(map);}}
-      setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
-      setSideBar={(title, description, contentType, isActive) => setSideBar(title, description, contentType, isActive)}/>,
+      setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
       placeholder);
     new mapboxgl.Popup()
       .setLngLat(coordinates)
