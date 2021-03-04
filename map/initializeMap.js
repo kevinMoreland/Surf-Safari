@@ -5,10 +5,20 @@ import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 
 let markers = []
-function changeMapStyle(map, mapStyle) {
+let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
+let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
+let mapboxgl = null
+let map = null
+
+//variables for the click menu DOM content
+let placeholder = null
+let onClickPopup = null
+
+
+function changeMapStyle(mapStyle) {
   map.setStyle(mapStyle);
 }
-function addPopup(map, el, coordinates) {
+function addPopup(el, coordinates) {
     const placeholder = document.createElement('div');
     ReactDOM.render(el, placeholder);
 
@@ -30,7 +40,7 @@ function removeMapMarker(coordinates) {
   }
   console.log(markers);
 }
-function addMapMarker(coordinates, map, mapboxgl) {
+function addMapMarker(coordinates) {
   //This ONLY adds to the UI. Seperately, add to the DB
 
   //ensure we don't add too markers directly on top of one another
@@ -46,29 +56,57 @@ function addMapMarker(coordinates, map, mapboxgl) {
   markers.push(newMarker);
   console.log(markers);
 }
+function updateMapOnLogInChange(isLoggedIn) {
+  setOnMapClick(isLoggedIn);
+}
 
-function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog) {
+function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
+  //add the placeholder DOM that displays the menu box appearing onClick
+  if(placeholder == null) {
+    placeholder = document.createElement("div");
+  }
+
+  ReactDOM.render(<ClickMenu
+    isLoggedIn={isLoggedIn}
+    addMapMarker={() => addMapMarker(coordinates)}
+    removeMapMarker={() => removeMapMarker(coordinates)}
+    setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
+    setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
+    placeholder);
+}
+function setOnMapClick(isLoggedIn) {
+  console.log("Initializing setmapClick with " + isLoggedIn)
+  map.on("click", (e) => {
+    var coordinates = e.lngLat;
+    map.easeTo({center: coordinates});
+    renderClickMenuPlaceHolder(isLoggedIn, coordinates);
+    if(onClickPopup != null) {
+      onClickPopup.remove();
+    }
+    onClickPopup = new mapboxgl.Popup()
+                     .setLngLat(coordinates)
+                     .setDOMContent(placeholder)
+                     .addTo(map);
+  });
+}
+
+function initializeMap(mapboxglInput, mapInput, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
   //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
+
+  //save these function and objects in this class so I can use them for later
+  setSideBar = setSideBarInput
+  setFullScreenDialog = setFullScreenDialogInput
+  mapboxgl = mapboxglInput
+  map = mapInput
 
   //initialize style
   map.setStyle(mapStyle);
   map.touchPitch.disable();
   map.keyboard.disable();
 
-  map.on("click", function(e) {
-    var coordinates = e.lngLat;
-    map.easeTo({center: coordinates});
-    let placeholder = document.createElement("div");
-    ReactDOM.render(<ClickMenu
-      addMapMarker={() => addMapMarker(coordinates, map, mapboxgl)}
-      removeMapMarker={() => removeMapMarker(coordinates)}
-      setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
-      placeholder);
-    new mapboxgl.Popup()
-      .setLngLat(coordinates)
-      .setDOMContent(placeholder)
-      .addTo(map);
-  });
+  //set the map click event
+  setOnMapClick(isLoggedIn);
+
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
   });
@@ -101,5 +139,6 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog)
 
 module.exports = {
   changeMapStyle,
-  initializeMap
+  initializeMap,
+  updateMapOnLogInChange
 }

@@ -7,7 +7,7 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
-import { initializeMap, changeMapStyle } from "../map/initializeMap";
+import { initializeMap, changeMapStyle, updateMapOnLogInChange } from "../map/initializeMap";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 
@@ -23,7 +23,7 @@ const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
 
-  //hook for displaying the correct map. TODO replace surfMap with my perosonalized map
+  //hook for displaying the correct map. TODO replace surfMap with my personalized map
   const [Map, setMap] = useState();
   const satMap = "mapbox://styles/mapbox/satellite-v9";
   const outdoorsMap = "mapbox://styles/mapbox/outdoors-v11";
@@ -55,13 +55,23 @@ export default function Home() {
   }
 
   useEffect(() => {
-    console.log(sideBarInfo)
-  }, [sideBarInfo])
-  useEffect(() => {
     if(pageIsMounted){
       changeMapStyle(Map, mapStyle);
     }
   }, [mapStyle])
+
+  //TODO LEFT OFF HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //TODO I am trying to get the 'save spot' option to appear/disappear on loggin or not logged in,
+  //TODO as well as make it possible to load data in once a user is logged in
+  useEffect(() => {
+    console.log("auth state is: " + authState)
+    if(pageIsMounted) {
+      let isLoggedIn = authState == AuthState.SignedIn;
+      console.log("page is mounted, updating content w log in info:")
+      updateMapOnLogInChange(isLoggedIn);
+    }
+  }, [authState])
+
   useEffect(() => {
     setPageIsMounted(true);
     let map = new mapboxgl.Map({
@@ -73,7 +83,8 @@ export default function Home() {
     initializeMap(mapboxgl,
                   map,
                   mapStyle,
-                  (c, d) => setSideBarInfo({content: c, isActive: d}),
+                  authState == AuthState.SignedIn,
+                  (a, b) => setSideBarInfo({content: a, isActive: b}),
                   (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
     setMap(map);
   }, []);

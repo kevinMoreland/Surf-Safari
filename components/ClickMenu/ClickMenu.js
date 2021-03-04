@@ -4,14 +4,18 @@ import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/Surf
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
 
 export default function ClickMenu(props) {
-  //props.addMapMarker();
+  //only allow option to save a spot if the user is logged in
+  let saveSpotContent = <></>
+  if(props.isLoggedIn) {
+    saveSpotContent = <p onClick={() => props.setSideBar(
+                            new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user")),
+                            true)}>
+                         Save Spot
+                      </p>
+  }
   return (
     <div className={styles.test}>
-      <p onClick={() => props.setSideBar(
-        new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user")),
-        true)}>
-        Save Spot
-      </p>
+      {saveSpotContent}
       <p onClick={() => props.setSideBar(new ForecastContentInput(), true)}>Get Weather and Swell Forecast</p>
       <p>Measure Distance</p>
       <p onClick={() => props.setFullScreenDialog(fullscreenDialogContentTypes.SATELLITE, true)}>View NASA Satellite Images</p>
