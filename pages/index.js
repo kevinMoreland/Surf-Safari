@@ -41,7 +41,6 @@ export default function Home() {
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
   useEffect(() => {
-      console.log("Auth state set... NOW")
       if(authState === undefined) {
         Auth.currentAuthenticatedUser().then(authData => {
           setAuthState(AuthState.SignedIn);
@@ -57,18 +56,17 @@ export default function Home() {
 
   mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
 
+  //toggleMap changes the value of 'mapStyle', which triggers the below effect to actually change map content
   function toggleMap(newMapStyle) {
     setMapStyle(newMapStyle);
   }
-
   useEffect(() => {
     if(pageIsMounted){
-      changeMapStyle(Map, mapStyle);
+      changeMapStyle(mapStyle);
     }
   }, [mapStyle])
 
   useEffect(() => {
-    console.log("auth state is: " + authState)
     if(pageIsMounted) {
       let isLoggedIn = authState == AuthState.SignedIn;
       console.log("page is mounted, updating content w log in info:")
