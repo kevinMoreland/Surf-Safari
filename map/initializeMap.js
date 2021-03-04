@@ -57,6 +57,7 @@ function initializeMap(mapboxgl, map, mapStyle, setSideBar, setFullScreenDialog)
 
   map.on("click", function(e) {
     var coordinates = e.lngLat;
+    map.easeTo({center: coordinates});
     let placeholder = document.createElement("div");
     ReactDOM.render(<ClickMenu
       addMapMarker={() => addMapMarker(coordinates, map, mapboxgl)}
