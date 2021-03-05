@@ -8,9 +8,9 @@ import 'fontsource-roboto';
 
 export default function LoginContent(props) {
   let content = <SignUp />
-  if(props.authState == AuthState.SignedIn && props.user) {
+  if(props.authState == AuthState.SignedIn) {
     content = <div style={{paddingTop: "20vh", paddingLeft: "10vw", paddingRight: "10vw"}}>
-                <h1>Sign out from {props.user.username} ?</h1>
+                <h1>Sign out?</h1>
                 <SignOut />
               </div>
   }

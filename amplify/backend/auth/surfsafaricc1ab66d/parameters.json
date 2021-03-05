@@ -1,6 +1,4 @@
 {
-    "identityPoolName": "surfsafaricc1ab66d_identitypool_cc1ab66d",
-    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "surfsacc1ab66d",
     "userPoolName": "surfsafaricc1ab66d_userpool_cc1ab66d",
     "autoVerifiedAttributes": [
@@ -29,10 +27,10 @@
         "email"
     ],
     "userpoolClientLambdaRole": "surfsacc1ab66d_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "sharedId": "cc1ab66d",
     "resourceName": "surfsafaricc1ab66d",
-    "authSelections": "identityPoolAndUserPool",
+    "authSelections": "userPoolOnly",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -45,12 +43,21 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "manual",
     "usernameAttributes": [
         "email"
     ],
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": []
+    "dependsOn": [],
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": "{}",
+    "hostedUI": false,
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": [],
+    "authProviders": []
 }

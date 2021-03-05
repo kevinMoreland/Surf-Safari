@@ -17,7 +17,7 @@ import 'fontsource-roboto';
 import { Amplify, Auth } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import awsconfig from '../src/aws-exports';
-Amplify.configure(awsconfig);
+Amplify.configure({...awsconfig, ssr: true });
 //-----------------------------------------------------
 
 export default function Home() {
