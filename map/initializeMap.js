@@ -4,9 +4,10 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 
+const mapContainerDivName = "my-map"
+
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
-
 
 let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
@@ -138,5 +139,6 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
 module.exports = {
   changeMapStyle,
   initializeMap,
-  updateMapOnLogInChange
+  updateMapOnLogInChange,
+  mapContainerDivName
 }

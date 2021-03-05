@@ -7,7 +7,9 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
-import { initializeMap, changeMapStyle, updateMapOnLogInChange } from "../map/initializeMap";
+import { initializeMap, changeMapStyle, updateMapOnLogInChange, mapContainerDivName } from "../map/initializeMap";
+import { mapModes, availableMaps } from "../map/mapModes";
+
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 
@@ -20,36 +22,40 @@ Amplify.configure(awsconfig);
 
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
-
-  //hook for displaying the correct map. TODO replace surfMap with my personalized map
-  //const [Map, setMap] = useState();
-  const satMap = "mapbox://styles/mapbox/satellite-v9";
-  const outdoorsMap = "mapbox://styles/mapbox/outdoors-v11";
-  const surfMap = "mapbox://styles/mapbox/streets-v11"
-  const availableMaps = [satMap, outdoorsMap, surfMap]
-  const [mapStyle, setMapStyle] = useState(outdoorsMap);
-
-  //hook for sidebar info
+  const [mapStyle, setMapStyle] = useState(mapModes.OUTDOOR);
   const [sideBarInfo, setSideBarInfo] = useState({content: {}, isActive: false});
-
-  //hook for full screen dialog info
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
-
-  //stuff for login/signup authentication and keeping track of the logged in account
   const [authState, setAuthState] = useState();
-  const [user, setUser] = useState();
+
+  //When page first loads, set page mounted to true and initialize map
+  useEffect(() => {
+    setPageIsMounted(true);
+    initializeMap(mapContainerDivName,
+                  mapStyle,
+                  authState == AuthState.SignedIn,
+                  (a, b) => setSideBarInfo({content: a, isActive: b}),
+                  (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
+  }, []);
+
+  //When page first loads, set auth state
   useEffect(() => {
       if(authState === undefined) {
         Auth.currentAuthenticatedUser().then(authData => {
           setAuthState(AuthState.SignedIn);
-          setUser(authData);
         });
       }
       return onAuthUIStateChange((nextAuthState, authData) => {
           setAuthState(nextAuthState);
-          setUser(authData)
       });
   }, []);
+
+  //update map content when status of login changes
+  useEffect(() => {
+    if(pageIsMounted) {
+      let isLoggedIn = authState == AuthState.SignedIn;
+      updateMapOnLogInChange(isLoggedIn);
+    }
+  }, [authState])
 
   //toggleMap changes the value of 'mapStyle', which triggers the below effect to actually change map content
   function toggleMap(newMapStyle) {
@@ -60,23 +66,6 @@ export default function Home() {
       changeMapStyle(mapStyle);
     }
   }, [mapStyle])
-
-  useEffect(() => {
-    if(pageIsMounted) {
-      let isLoggedIn = authState == AuthState.SignedIn;
-      console.log("page is mounted, updating content w log in info:")
-      updateMapOnLogInChange(isLoggedIn);
-    }
-  }, [authState])
-
-  useEffect(() => {
-    setPageIsMounted(true);
-    initializeMap("my-map",
-                  mapStyle,
-                  authState == AuthState.SignedIn,
-                  (a, b) => setSideBarInfo({content: a, isActive: b}),
-                  (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
-  }, []);
 
   return (
   //TODO: on start, get browser data to see if login saved. Login user if so, go straight to map
@@ -98,7 +87,6 @@ export default function Home() {
         handleClose={() => setFullScreenDialogInfo({contentType: fullScreenDialogInfo.contentType, isActive: false})}
         open={fullScreenDialogInfo.isActive}
         authState={authState}
-        user={user}
         />
       <Sidebar
         active={sideBarInfo.isActive}
@@ -107,7 +95,7 @@ export default function Home() {
 
       <div className={styles.overlapContainer}>
         <main className={styles.flexContainer}>
-          <div id="my-map" className={styles.mapContainer}/>
+          <div id={mapContainerDivName} className={styles.mapContainer}/>
         </main>
 
         <div className={styles.profileIconContainer}>
