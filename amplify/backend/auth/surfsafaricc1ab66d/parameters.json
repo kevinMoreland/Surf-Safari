@@ -24,7 +24,8 @@
         "email"
     ],
     "userpoolClientReadAttributes": [
-        "email"
+        "email",
+        "email_verified"
     ],
     "userpoolClientLambdaRole": "surfsacc1ab66d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": true,

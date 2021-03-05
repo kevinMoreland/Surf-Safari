@@ -14,7 +14,7 @@ export default function ClickMenu(props) {
                       </p>
   }
   return (
-    <div className={styles.test}>
+    <div className={styles.clickMenuContainer}>
       {saveSpotContent}
       <p onClick={() => props.setSideBar(new ForecastContentInput(), true)}>Get Weather and Swell Forecast</p>
       <p>Measure Distance</p>
