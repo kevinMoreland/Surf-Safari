@@ -4,28 +4,21 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 
+const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
+mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
+
+
 let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
-let mapboxgl = null
 let map = null
 
 //variables for the click menu DOM content
 let placeholder = null
 let onClickPopup = null
 
-
 function changeMapStyle(mapStyle) {
   map.setStyle(mapStyle);
-}
-function addPopup(el, coordinates) {
-    const placeholder = document.createElement('div');
-    ReactDOM.render(el, placeholder);
-
-    new MapboxGl.Popup()
-      .setDOMContent(placeholder)
-      .setLngLat(coordinates)
-      .addTo(map);
 }
 
 function removeMapMarker(coordinates) {
@@ -40,6 +33,7 @@ function removeMapMarker(coordinates) {
   }
   console.log(markers);
 }
+
 function addMapMarker(coordinates) {
   //This ONLY adds to the UI. Seperately, add to the DB
 
@@ -90,14 +84,18 @@ function setOnMapClick(isLoggedIn) {
   });
 }
 
-function initializeMap(mapboxglInput, mapInput, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
+function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
   //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
 
   //save these function and objects in this class so I can use them for later
   setSideBar = setSideBarInput
   setFullScreenDialog = setFullScreenDialogInput
-  mapboxgl = mapboxglInput
-  map = mapInput
+  map = new mapboxgl.Map({
+    container: containerName,
+    style: mapStyle,
+    center: [-77.02, 38.887],
+    zoom: 1,
+  });
 
   //initialize style
   map.setStyle(mapStyle);

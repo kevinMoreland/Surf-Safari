@@ -18,13 +18,11 @@ import awsconfig from '../src/aws-exports';
 Amplify.configure(awsconfig);
 //-----------------------------------------------------
 
-const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
-
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
 
   //hook for displaying the correct map. TODO replace surfMap with my personalized map
-  const [Map, setMap] = useState();
+  //const [Map, setMap] = useState();
   const satMap = "mapbox://styles/mapbox/satellite-v9";
   const outdoorsMap = "mapbox://styles/mapbox/outdoors-v11";
   const surfMap = "mapbox://styles/mapbox/streets-v11"
@@ -52,9 +50,6 @@ export default function Home() {
           setUser(authData)
       });
   }, []);
-  //
-
-  mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
 
   //toggleMap changes the value of 'mapStyle', which triggers the below effect to actually change map content
   function toggleMap(newMapStyle) {
@@ -76,19 +71,11 @@ export default function Home() {
 
   useEffect(() => {
     setPageIsMounted(true);
-    let map = new mapboxgl.Map({
-      container: "my-map",
-      style: mapStyle,
-      center: [-77.02, 38.887],
-      zoom: 1,
-    });
-    initializeMap(mapboxgl,
-                  map,
+    initializeMap("my-map",
                   mapStyle,
                   authState == AuthState.SignedIn,
                   (a, b) => setSideBarInfo({content: a, isActive: b}),
                   (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
-    setMap(map);
   }, []);
 
   return (
