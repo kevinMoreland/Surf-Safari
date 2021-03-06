@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom'
 import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
-
+import { generateGeoJson, generateGeoJsonData } from './generateGeoJson.js'
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
+const layerName = 'surfspotsMarkers'
 
 let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
@@ -46,9 +47,16 @@ function addMapMarker(coordinates) {
     }
   }
   let newMarker = new mapboxgl.Marker({color: "#e83e20", draggable: false})
-                                      .setLngLat(coordinates)
-                                      .addTo(map);
+                                      .setLngLat(coordinates);
+                                      //.addTo(map);
+  let markerel = newMarker.getElement()
+      markerel.addEventListener('click', (e) => {
+        alert('clicked! updated!!')
+
+      })
   markers.push(newMarker);
+  console.log(generateGeoJsonData(layerName, markers))
+  map.getSource(layerName).setData(JSON.parse(generateGeoJsonData(layerName, markers)))
   console.log(markers);
 }
 function updateMapOnLogInChange(isLoggedIn) {
@@ -105,6 +113,27 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
 
   //set the map click event
   setOnMapClick(isLoggedIn);
+
+  map.on('load', function () {
+    console.log(generateGeoJson(layerName, markers))
+    map.loadImage(
+                'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+      function (error, image) {
+          if (error) throw error;
+          map.addImage('custom-marker', image);
+          map.addSource(layerName, JSON.parse(generateGeoJson(layerName, markers)))
+          map.addLayer({
+            'id': 'layerId',
+            'type': 'symbol',
+            'source': layerName,
+            'layout': {
+              'icon-image': 'custom-marker',
+              'icon-allow-overlap': true
+            }
+          });
+      }
+    );
+  })
 
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
