@@ -8,19 +8,28 @@ const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqMnNvMnRldzFjYmtzIn0.5zO1V-Zr91Rsq_1dSHFYVg'
-const layerName = 'surfspotsMarkers'
+const sourceName = 'surfspotsMarkers'
+const layerId = 'surfspotsLayer'
 
 let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
 let map = null
 
+//Used for when map style reloads, and I want to preserve my surf spot markers
+let layerTemp = null
+let sourceTemp = null
+
 //variables for the click menu DOM content
 let placeholder = null
 let onClickPopup = null
 
 function changeMapStyle(mapStyle) {
+  layerTemp = map.getLayer(layerId).serialize()
+  sourceTemp = map.getSource(sourceName).serialize()
   map.setStyle(mapStyle);
+  //Now that style is updated, my 'idle' listener will trigger and ensure my layer and source are
+  //preserved using the values in layerTemp and sourceTemp
 }
 
 function removeMapMarker(coordinates) {
@@ -55,8 +64,8 @@ function addMapMarker(coordinates) {
 
       })
   markers.push(newMarker);
-  console.log(generateGeoJsonData(layerName, markers))
-  map.getSource(layerName).setData(JSON.parse(generateGeoJsonData(layerName, markers)))
+  console.log(generateGeoJsonData(sourceName, markers))
+  map.getSource(sourceName).setData(JSON.parse(generateGeoJsonData(sourceName, markers)))
   console.log(markers);
 }
 function updateMapOnLogInChange(isLoggedIn) {
@@ -115,17 +124,17 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
   setOnMapClick(isLoggedIn);
 
   map.on('load', function () {
-    console.log(generateGeoJson(layerName, markers))
+    console.log(generateGeoJson(sourceName, markers))
     map.loadImage(
-                'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+      'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
       function (error, image) {
           if (error) throw error;
           map.addImage('custom-marker', image);
-          map.addSource(layerName, JSON.parse(generateGeoJson(layerName, markers)))
+          map.addSource(sourceName, JSON.parse(generateGeoJson(sourceName, markers)))
           map.addLayer({
-            'id': 'layerId',
+            'id': layerId,
             'type': 'symbol',
-            'source': layerName,
+            'source': sourceName,
             'layout': {
               'icon-image': 'custom-marker',
               'icon-allow-overlap': true
@@ -134,7 +143,22 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
       }
     );
   })
-
+  map.on('idle', function(e) {
+    console.log("idle!!!")
+    if(layerTemp != null && sourceTemp != null) {
+      map.loadImage(
+            'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+            function (error, image) {
+                if (error) throw error;
+                map.addImage('custom-marker', image);
+                map.addSource(sourceName, sourceTemp)
+                map.addLayer(layerTemp)
+                //setting these to null prevents this from happening any time other than right after style change
+                sourceTemp = null
+                layerTemp = null
+      })
+    }
+  });
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
   });
