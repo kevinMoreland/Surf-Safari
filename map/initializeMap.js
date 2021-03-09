@@ -4,6 +4,7 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 import { generateGeoJson, generateGeoJsonData } from './generateGeoJson.js'
+import Marker from './Marker.js'
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
@@ -19,6 +20,7 @@ let map = null
 //Used for when map style reloads, and I want to preserve my surf spot markers
 let layerTemp = null
 let sourceTemp = null
+const markerIconPath = "/markerIcon.png"
 
 //variables for the click menu DOM content
 let placeholder = null
@@ -35,9 +37,7 @@ function changeMapStyle(mapStyle) {
 function removeMapMarker(coordinates) {
   //This ONLY removes from the UI component. Seperately, remove from the DB
   for(let i = 0; i < markers.length; i++) {
-    let markerCoordinates = markers[i].getLngLat();
-    if(markerCoordinates.lat == coordinates.lat && markerCoordinates.lng == coordinates.lng) {
-      markers[i].remove();
+    if(markers[i].lat == coordinates.lat && markers[i].lng == coordinates.lng) {
       markers.splice(i, 1);
       break;
     }
@@ -50,21 +50,12 @@ function addMapMarker(coordinates) {
 
   //ensure we don't add too markers directly on top of one another
   for(let i = 0; i < markers.length; i++) {
-    let markerCoordinates = markers[i].getLngLat();
-    if(markerCoordinates.lat == coordinates.lat && markerCoordinates.lng == coordinates.lng) {
+    if(markers[i].lat == coordinates.lat && markers[i].lng == coordinates.lng) {
       return;
     }
   }
-  let newMarker = new mapboxgl.Marker({color: "#e83e20", draggable: false})
-                                      .setLngLat(coordinates);
-                                      //.addTo(map);
-  let markerel = newMarker.getElement()
-      markerel.addEventListener('click', (e) => {
-        alert('clicked! updated!!')
-
-      })
+  let newMarker = new Marker(coordinates.lng, coordinates.lat, "", "")
   markers.push(newMarker);
-  console.log(generateGeoJsonData(sourceName, markers))
   map.getSource(sourceName).setData(JSON.parse(generateGeoJsonData(sourceName, markers)))
   console.log(markers);
 }
@@ -126,7 +117,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
   map.on('load', function () {
     console.log(generateGeoJson(sourceName, markers))
     map.loadImage(
-      'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+      markerIconPath,
       function (error, image) {
           if (error) throw error;
           map.addImage('custom-marker', image);
@@ -144,10 +135,9 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
     );
   })
   map.on('idle', function(e) {
-    console.log("idle!!!")
     if(layerTemp != null && sourceTemp != null) {
       map.loadImage(
-            'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+            markerIconPath,
             function (error, image) {
                 if (error) throw error;
                 map.addImage('custom-marker', image);

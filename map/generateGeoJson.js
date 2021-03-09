@@ -21,7 +21,7 @@ function generateFeature(marker) {
     'type': 'Feature',
     'geometry': {
       'type': 'Point',
-      'coordinates': [marker.getLngLat().lng, marker.getLngLat().lat]
+      'coordinates': [marker.lng, marker.lat]
     },
     'properties': {
       'title': 'I can set my own yee yee!!'
