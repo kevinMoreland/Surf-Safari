@@ -72,24 +72,31 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
   ReactDOM.render(<ClickMenu
     isLoggedIn={isLoggedIn}
     addMapMarker={() => addMapMarker(coordinates)}
+    closePopup={closePopup}
     removeMapMarker={() => removeMapMarker(coordinates)}
     setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
     setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
     placeholder);
+}
+function closePopup() {
+  if(onClickPopup != null) {
+    onClickPopup.remove();
+  }
+}
+function openPopup(isLoggedIn, coordinates) {
+  renderClickMenuPlaceHolder(isLoggedIn, coordinates);
+  onClickPopup = new mapboxgl.Popup()
+                 .setLngLat(coordinates)
+                 .setDOMContent(placeholder)
+                 .addTo(map);
 }
 function setOnMapClick(isLoggedIn) {
   console.log("Initializing setmapClick with " + isLoggedIn)
   map.on("click", (e) => {
     var coordinates = e.lngLat;
     map.easeTo({center: coordinates});
-    renderClickMenuPlaceHolder(isLoggedIn, coordinates);
-    if(onClickPopup != null) {
-      onClickPopup.remove();
-    }
-    onClickPopup = new mapboxgl.Popup()
-                     .setLngLat(coordinates)
-                     .setDOMContent(placeholder)
-                     .addTo(map);
+    closePopup();
+    openPopup(isLoggedIn, coordinates);
   });
 }
 

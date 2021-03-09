@@ -7,17 +7,23 @@ export default function ClickMenu(props) {
   //only allow option to save a spot if the user is logged in
   let saveSpotContent = <></>
   if(props.isLoggedIn) {
-    saveSpotContent = <p onClick={() => props.setSideBar(
+    saveSpotContent = <p onClick={() =>
+                          {props.closePopup();
+                           props.setSideBar(
                             new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user")),
-                            true)}>
+                            true);}}>
                          Save Spot
                       </p>
   }
   return (
     <div className={styles.clickMenuContainer}>
       {saveSpotContent}
-      <p onClick={() => props.setSideBar(new ForecastContentInput(), true)}>Get Weather and Swell Forecast</p>
+      <p onClick={() => {props.closePopup();
+                         props.setSideBar(new ForecastContentInput(), true);}}>
+                         Get Weather and Swell Forecast</p>
       <p>Measure Distance</p>
-      <p onClick={() => props.setFullScreenDialog(fullscreenDialogContentTypes.SATELLITE, true)}>View NASA Satellite Images</p>
+      <p onClick={() => {props.closePopup();
+                         props.setFullScreenDialog(fullscreenDialogContentTypes.SATELLITE, true);}}>
+                         View NASA Satellite Images</p>
     </div>)
 }
