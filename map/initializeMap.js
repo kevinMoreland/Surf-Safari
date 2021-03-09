@@ -128,6 +128,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
             'source': sourceName,
             'layout': {
               'icon-image': 'custom-marker',
+              'icon-size': 0.2,
               'icon-allow-overlap': true
             }
           });
