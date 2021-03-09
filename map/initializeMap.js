@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
+import SurfSpotContentInput from "../components/Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
+
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
@@ -19,6 +21,23 @@ let map = null
 let placeholder = null
 let onClickPopup = null
 
+//Javascript does funny stuff like lets -4 % 5 = -4 instead of 1, which I want. This function fixes that
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+function coordinatesAreEqual(coord1, coord2) {
+  let threshold = 0.0000000001
+  let coord1Lat = mod(coord1.lat, 360)
+  let coord2Lat = mod(coord2.lat, 360)
+  let coord1Lng = mod(coord1.lng, 360)
+  let coord2Lng = mod(coord2.lng, 360)
+  if((coord1Lat >= coord2Lat - threshold && coord1Lat <= coord2Lat + threshold) &&
+     (coord1Lng >= coord2Lng - threshold && coord1Lng <= coord2Lng + threshold)) {
+    return true
+  }
+  return false
+}
+
 function changeMapStyle(mapStyle) {
   map.setStyle(mapStyle);
 }
@@ -26,7 +45,7 @@ function changeMapStyle(mapStyle) {
 function removeMapMarker(coordinates) {
   //This ONLY removes from the UI component. Seperately, remove from the DB
   for(let i = 0; i < markers.length; i++) {
-    if(markers[i].lat == coordinates.lat && markers[i].lng == coordinates.lng) {
+    if(coordinatesAreEqual(markers[i].getLngLat(), coordinates)) {
       markers[i].remove();
       markers.splice(i, 1);
       break;
@@ -37,10 +56,9 @@ function removeMapMarker(coordinates) {
 
 function addMapMarker(coordinates) {
   //This ONLY adds to the UI. Seperately, add to the DB
-
   //ensure we don't add too markers directly on top of one another
   for(let i = 0; i < markers.length; i++) {
-    if(markers[i].lat == coordinates.lat && markers[i].lng == coordinates.lng) {
+    if(coordinatesAreEqual(markers[i].getLngLat(), coordinates)) {
       return;
     }
   }
@@ -49,7 +67,13 @@ function addMapMarker(coordinates) {
                                       .addTo(map);
   let markerel = newMarker.getElement()
       markerel.addEventListener('click', (e) => {
-        alert('clicked! updated!!')
+        setSideBar(new SurfSpotContentInput("Title!",
+                                            "Description!",
+                                            () => addMapMarker(coordinates),
+                                            () => removeMapMarker(coordinates),
+                                            () => alert("hello there user"),
+                                            coordinates.lng,
+                                            coordinates.lat), true);
         e.stopPropagation();
       })
   markers.push(newMarker);
@@ -69,6 +93,7 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
     isLoggedIn={isLoggedIn}
     addMapMarker={() => addMapMarker(coordinates)}
     closePopup={closePopup}
+    coordinates={coordinates}
     removeMapMarker={() => removeMapMarker(coordinates)}
     setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
     setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
@@ -80,6 +105,7 @@ function closePopup() {
   }
 }
 function openPopup(isLoggedIn, coordinates) {
+  console.log(coordinates)
   renderClickMenuPlaceHolder(isLoggedIn, coordinates);
   onClickPopup = new mapboxgl.Popup()
                  .setLngLat(coordinates)
@@ -87,7 +113,6 @@ function openPopup(isLoggedIn, coordinates) {
                  .addTo(map);
 }
 function setOnMapClick(isLoggedIn) {
-  console.log("Initializing setmapClick with " + isLoggedIn)
   map.on("click", (e) => {
     var coordinates = e.lngLat;
     map.easeTo({center: coordinates});

@@ -48,6 +48,7 @@ export default function SurfSpotContent(props) {
           onChange={()=>console.log("changed Title")}
           multiline
           rowsMax={2}/>
+        <p style={{fontSize: 10}}>Longitude: {props.content.lng} Latitude: {props.content.lat}</p>
         <br/>
         <br/>
         <InputBase

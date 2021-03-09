@@ -10,7 +10,7 @@ export default function ClickMenu(props) {
     saveSpotContent = <p onClick={() =>
                           {props.closePopup();
                            props.setSideBar(
-                            new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user")),
+                            new SurfSpotContentInput("", "", props.addMapMarker, props.removeMapMarker, () => alert("update user"), props.coordinates.lng, props.coordinates.lat),
                             true);}}>
                          Save Spot
                       </p>
