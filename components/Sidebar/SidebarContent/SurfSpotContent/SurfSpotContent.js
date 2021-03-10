@@ -9,6 +9,9 @@ import { Amplify, Auth} from 'aws-amplify';
 import { API } from "@aws-amplify/api";
 
 export default function SurfSpotContent(props) {
+  let inputTitleVal = ""
+  let inputDescrVal = ""
+
   console.log(props.content)
   const addSurfSpot = async (event) => {
     event.preventDefault();
@@ -45,7 +48,8 @@ export default function SurfSpotContent(props) {
           id="standard-basic"
           label=""
           placeholder="Title"
-          onChange={()=>console.log("changed Title")}
+          defaultValue={props.content.title}
+          onChange={(e)=>{console.log(e); inputTitleVal = e.target.value;}}
           multiline
           rowsMax={2}/>
         <p style={{fontSize: 10}}>Longitude: {props.content.lng} Latitude: {props.content.lat}</p>
@@ -56,12 +60,13 @@ export default function SurfSpotContent(props) {
           id="standard-textarea"
           label=""
           placeholder="Description"
-          onChange={()=>console.log("changed Description")}
+          defaultValue={props.content.description}
+          onChange={(e)=>{console.log(e); inputDescrVal = e.target.value;}}
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
-          <Button onClick={props.content.addMapMarker} variant="contained" color="primary">Save</Button>
+          <Button onClick={()=>props.content.updateMapMarker(inputTitleVal, inputDescrVal)} variant="contained" color="primary">Save</Button>
           <Button onClick={props.content.removeMapMarker} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)
