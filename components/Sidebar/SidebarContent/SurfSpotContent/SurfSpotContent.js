@@ -5,14 +5,22 @@ import { InputBase } from '@material-ui/core';
 import 'fontsource-roboto';
 import { createUser, updateUser } from "../../../../src/graphql/mutations";
 import { getUser } from "../../../../src/graphql/queries";
+import { useState, useEffect } from "react";
 import { Amplify, Auth} from 'aws-amplify';
 import { API } from "@aws-amplify/api";
 
 export default function SurfSpotContent(props) {
-  let inputTitleVal = ""
-  let inputDescrVal = ""
+  const [titleVal, setTitleVal] = useState(props.content.title);
+  const [descVal, setDescVal] = useState(props.content.description);
 
-  console.log(props.content)
+  //Ensures that when select a new markers, the title and description value change.
+  //This is important because there is only 1 sidebar in the website that is never regenerated,
+  //so otherwise without this the titleVal and descVal would just be set to whatever they were when the most recent marker was made
+  useEffect(() => {
+    setTitleVal(props.content.title)
+    setDescVal(props.content.description)
+  }, [props.content]);
+
   const addSurfSpot = async (event) => {
     event.preventDefault();
     const currentUser = await Auth.currentAuthenticatedUser();
@@ -48,8 +56,8 @@ export default function SurfSpotContent(props) {
           id="standard-basic"
           label=""
           placeholder="Title"
-          defaultValue={props.content.title}
-          onChange={(e)=>{console.log(e); inputTitleVal = e.target.value;}}
+          value={titleVal}
+          onChange={(e)=>{setTitleVal(e.target.value);}}
           multiline
           rowsMax={2}/>
         <p style={{fontSize: 10}}>Longitude: {props.content.lng} Latitude: {props.content.lat}</p>
@@ -60,13 +68,13 @@ export default function SurfSpotContent(props) {
           id="standard-textarea"
           label=""
           placeholder="Description"
-          defaultValue={props.content.description}
-          onChange={(e)=>{console.log(e); inputDescrVal = e.target.value;}}
+          value={descVal}
+          onChange={(e)=>{setDescVal(e.target.value);}}
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
-          <Button onClick={()=>props.content.updateMapMarker(inputTitleVal, inputDescrVal)} variant="contained" color="primary">Save</Button>
+          <Button onClick={()=>props.content.updateMapMarker(titleVal, descVal)} variant="contained" color="primary">Save</Button>
           <Button onClick={props.content.removeMapMarker} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)

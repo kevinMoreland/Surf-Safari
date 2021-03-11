@@ -76,7 +76,9 @@ function updateMapMarker(coordinates, title, description) {
   }
   else {
     addMapMarker(coordinates)
+    updateMapMarker(coordinates, title, description)
   }
+  console.log(markers)
 }
 
 function addMapMarker(coordinates) {
@@ -90,12 +92,22 @@ function addMapMarker(coordinates) {
                                       .addTo(map);
   let markerel = newMapBoxMarker.getElement()
   markerel.addEventListener('click', (e) => {
-    setSideBar(new SurfSpotContentInput("",
-                                        "",
-                                        (title, description) => updateMapMarker(coordinates, title, description),
-                                        () => removeMapMarker(coordinates),
-                                        coordinates.lng,
-                                        coordinates.lat), true);
+    let markerIndex = getMarkerIndex(coordinates)
+    let surfSpotTitle = ""
+    let surfSpotDesc = ""
+    if(markerIndex != -1) {
+      surfSpotTitle = markers[markerIndex].title
+      surfSpotDesc = markers[markerIndex].description
+    }
+    let sideBarContent = new SurfSpotContentInput(surfSpotTitle,
+                                              surfSpotDesc,
+                                              (title, description) => updateMapMarker(coordinates, title, description),
+                                              () => removeMapMarker(coordinates),
+                                              coordinates.lng,
+                                              coordinates.lat)
+    setSideBar(sideBarContent, true);
+    map.easeTo({center: coordinates});
+
     //prevent the click event from firing anywhere else
     e.stopPropagation();
   })
