@@ -5,6 +5,9 @@ import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 import SurfSpotContentInput from "../components/Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import Marker from "./Marker.js"
+import { API } from "@aws-amplify/api";
+import { Auth} from 'aws-amplify';
+import { getUser } from "../src/graphql/queries";
 
 const mapContainerDivName = "my-map"
 
@@ -155,9 +158,28 @@ function setOnMapClick(isLoggedIn) {
     openPopup(isLoggedIn, coordinates);
   });
 }
+const fillAllMarkersFromCloud = async () => {
+    const currentUser = await Auth.currentAuthenticatedUser();
+    try {
+      const response = await API.graphql({
+        query: getUser,
+        variables: { id: currentUser.attributes.sub },
+      });
+      if(response.data.getUser) {
+        let existingSurfSpots = response.data.getUser.surfspots
+        for(let i = 0; i < existingSurfSpots.length; i++) {
+          addMapMarker({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat})
+        }
+      }
+    }
+    catch(e) {
+      console.log(e)
+    }
+}
 
 function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
   //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
+  fillAllMarkersFromCloud();
 
   //save these function and objects in this class so I can use them for later
   setSideBar = setSideBarInput
