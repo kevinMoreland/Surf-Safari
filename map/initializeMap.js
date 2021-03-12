@@ -167,8 +167,10 @@ const fillAllMarkersFromCloud = async () => {
       });
       if(response.data.getUser) {
         let existingSurfSpots = response.data.getUser.surfspots
+        console.log("Read this:")
+        console.log(response)
         for(let i = 0; i < existingSurfSpots.length; i++) {
-          addMapMarker({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat})
+          updateMapMarker({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat}, existingSurfSpots[i].name, existingSurfSpots[i].description)
         }
       }
     }
