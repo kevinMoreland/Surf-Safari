@@ -21,8 +21,7 @@ export default function SurfSpotContent(props) {
     setDescVal(props.content.description)
   }, [props.content]);
 
-  const addSurfSpot = async (event) => {
-    event.preventDefault();
+  const addSurfSpot = async (lng, lat, title, descr) => {
     const currentUser = await Auth.currentAuthenticatedUser();
     try {
       const response = await API.graphql({
@@ -37,14 +36,23 @@ export default function SurfSpotContent(props) {
             variables: {
                 input: {
                     id: currentUser.attributes.sub,
-                    surfspots: existingSurfSpots.push({long: 10.0, lat: 13.0, name: "Test Title", description: "Test Description"})
+                    surfspots: existingSurfSpots.push({long: lng, lat: lat, name: title, description: descr})
                 },
             },
         });
-        console.log(result);
+        console.log("response:")
+        console.log(response);
+      }
+      else {
+        alert("Error saving data! User couldn't be found on our server")
       }
     }
     catch (err) {
+      let errMessage = "Error saving data"
+      if(err.errors.length > 0) {
+        errMessage = "We got an error saving your data: " + err.errors[0].message
+      }
+      alert(errMessage)
       console.log(err);
     }
   }
@@ -74,7 +82,7 @@ export default function SurfSpotContent(props) {
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
-          <Button onClick={()=>props.content.updateMapMarker(titleVal, descVal)} variant="contained" color="primary">Save</Button>
+          <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={props.content.removeMapMarker} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)

@@ -5,7 +5,7 @@ type SurfSpot {
   description: String!
 }
 
-type User @model {
+type User @model @auth(rules: [{ allow: owner }]){
   id: ID!
   surfspots: [SurfSpot!]!
 }

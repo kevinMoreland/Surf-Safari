@@ -1,5 +1,11 @@
 {
   "AppSyncApiName": "surfsafari",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authsurfsafaricc1ab66d",
+      "Outputs.UserPoolId"
+    ]
+  }
 }
