@@ -21,6 +21,7 @@ export default function SurfSpotContent(props) {
     setDescVal(props.content.description)
   }, [props.content]);
 
+
   const addSurfSpot = async (lng, lat, title, descr) => {
     const currentUser = await Auth.currentAuthenticatedUser();
     try {
@@ -36,7 +37,7 @@ export default function SurfSpotContent(props) {
             variables: {
                 input: {
                     id: currentUser.attributes.sub,
-                    surfspots: existingSurfSpots.push({long: lng, lat: lat, name: title, description: descr})
+                    surfspots: existingSurfSpots.concat({long: lng, lat: lat, name: title, description: descr})
                 },
             },
         });
@@ -44,7 +45,18 @@ export default function SurfSpotContent(props) {
         console.log(response);
       }
       else {
-        alert("Error saving data! User couldn't be found on our server")
+        //User couldn't be found because they haven't saved any spots yet. Save the first spot
+        const result = await API.graphql({
+            query: createUser,
+            variables: {
+                input: {
+                    id: currentUser.attributes.sub,
+                    surfspots: [{long: lng, lat: lat, name: title, description: descr}]
+                },
+            },
+        });
+        console.log("response:")
+        console.log(response);
       }
     }
     catch (err) {
