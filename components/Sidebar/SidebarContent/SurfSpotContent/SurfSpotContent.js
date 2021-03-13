@@ -5,6 +5,8 @@ import { InputBase } from '@material-ui/core';
 import 'fontsource-roboto';
 import { createUser, updateUser } from "../../../../src/graphql/mutations";
 import { getUser } from "../../../../src/graphql/queries";
+import { mod, coordinatesAreEqual } from "../../../../functions/Math.js"
+
 import { useState, useEffect } from "react";
 import { Amplify, Auth} from 'aws-amplify';
 import { API } from "@aws-amplify/api";
@@ -21,6 +23,52 @@ export default function SurfSpotContent(props) {
     setDescVal(props.content.description)
   }, [props.content]);
 
+  const removeSurfSpot = async (lng, lat) => {
+    const currentUser = await Auth.currentAuthenticatedUser();
+    try {
+      const response = await API.graphql({
+        query: getUser,
+        variables: { id: currentUser.attributes.sub },
+      });
+      if(response.data.getUser) {
+        console.log(response.data.getUser)
+        let existingSurfSpots = response.data.getUser.surfspots
+        let indexToSlice = -1;
+        for(let i = 0; i < existingSurfSpots.length; i ++){
+          if(coordinatesAreEqual({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat}, {lng: lng, lat: lat})) {
+            indexToSlice = i
+            break
+          }
+        }
+        if(indexToSlice == -1) {
+          alert("Could not remove surf spot becaust it could not be found")
+          return
+        }
+        existingSurfSpots.splice(indexToSlice, 1)
+        console.log("array:")
+        console.log(existingSurfSpots)
+        const result = await API.graphql({
+            query: updateUser,
+            variables: {
+                input: {
+                    id: currentUser.attributes.sub,
+                    surfspots: existingSurfSpots
+                },
+            },
+        });
+        console.log("response:")
+        console.log(response);
+      }
+    }
+    catch (err) {
+      let errMessage = "Error deleting surf spot"
+      if(err.errors.length > 0) {
+        errMessage = "We got an error deleting your surf spot: " + err.errors[0].message
+      }
+      alert(errMessage)
+      console.log(err);
+    }
+  }
 
   const addSurfSpot = async (lng, lat, title, descr) => {
     const currentUser = await Auth.currentAuthenticatedUser();
@@ -95,7 +143,7 @@ export default function SurfSpotContent(props) {
         <div className={styles.buttons}>
           <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
-          <Button onClick={props.content.removeMapMarker} variant="contained" color="primary">Delete</Button>
+          <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker();}} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)
 }

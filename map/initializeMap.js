@@ -8,7 +8,7 @@ import Marker from "./Marker.js"
 import { API } from "@aws-amplify/api";
 import { Auth} from 'aws-amplify';
 import { getUser } from "../src/graphql/queries";
-
+import { mod, coordinatesAreEqual } from "../functions/Math.js"
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
@@ -25,23 +25,6 @@ let map = null
 //variables for the click menu DOM content
 let placeholder = null
 let onClickPopup = null
-
-//Javascript does funny stuff like lets -4 % 5 = -4 instead of 1, which I want. This function fixes that
-function mod(n, m) {
-  return ((n % m) + m) % m;
-}
-function coordinatesAreEqual(coord1, coord2) {
-  let threshold = 0.0000000001
-  let coord1Lat = mod(coord1.lat, 360)
-  let coord2Lat = mod(coord2.lat, 360)
-  let coord1Lng = mod(coord1.lng, 360)
-  let coord2Lng = mod(coord2.lng, 360)
-  if((coord1Lat >= coord2Lat - threshold && coord1Lat <= coord2Lat + threshold) &&
-     (coord1Lng >= coord2Lng - threshold && coord1Lng <= coord2Lng + threshold)) {
-    return true
-  }
-  return false
-}
 
 function changeMapStyle(mapStyle) {
   map.setStyle(mapStyle);
