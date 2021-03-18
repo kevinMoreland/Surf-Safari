@@ -44,7 +44,7 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
+#aws-exports.js instead of ignoring this, I have converted secret values to enviornment variables
 awsconfiguration.json
 amplifyconfiguration.json
 amplify-build-config.json
