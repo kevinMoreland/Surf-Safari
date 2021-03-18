@@ -78,7 +78,6 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
-        <link href='/css/weather-icons-wind.css' rel='stylesheet'/>
         <link
           rel="stylesheet"
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
