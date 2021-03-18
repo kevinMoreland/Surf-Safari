@@ -7,7 +7,7 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
-import { initializeMap, changeMapStyle, updateMapOnLogInChange, mapContainerDivName } from "../map/initializeMap";
+import { initializeMap, clearMapMarkers, fillAllMarkersFromCloud, changeMapStyle, updateMapOnLogInChange, mapContainerDivName } from "../map/initializeMap";
 import { mapModes, availableMaps } from "../map/mapModes";
 
 import { fetcher } from "../utilities/fetcher";
@@ -54,6 +54,11 @@ export default function Home() {
     if(pageIsMounted) {
       let isLoggedIn = authState == AuthState.SignedIn;
       updateMapOnLogInChange(isLoggedIn);
+
+      clearMapMarkers();
+      if(isLoggedIn) {
+        fillAllMarkersFromCloud();
+      }
     }
   }, [authState])
 

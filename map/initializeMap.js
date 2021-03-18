@@ -51,6 +51,12 @@ function removeMapMarker(coordinates) {
   }
   console.log(markers);
 }
+function clearMapMarkers() {
+  for(let i = 0; i < markers.length; i ++) {
+    markers[i].mapBoxMarkerObj.remove();
+  }
+  markers = []
+}
 
 //Update an existing marker if it exists, otherwise creates a new one
 function updateMapMarker(coordinates, title, description) {
@@ -218,5 +224,7 @@ module.exports = {
   changeMapStyle,
   initializeMap,
   updateMapOnLogInChange,
-  mapContainerDivName
+  mapContainerDivName,
+  clearMapMarkers,
+  fillAllMarkersFromCloud
 }
