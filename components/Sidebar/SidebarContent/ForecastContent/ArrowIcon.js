@@ -4,7 +4,7 @@ export default function ArrowIcon(props) {
   let degreesFrom = props.direction - 180
   return (<img src="/weatherIcons/wi-wind-deg.svg"
             style={{width: "15%",
-                    webkitTransform: "rotate(" + degreesFrom + "deg)",
+                    WebkitTransform: "rotate(" + degreesFrom + "deg)",
                     msTransform: "rotate(" + degreesFrom + "deg)",
                     transform: "rotate(" + degreesFrom + "deg)"}}/>)
 }
