@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/forecast",
+            "lambdaFunction": "forecastlambda",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/forecast"
+        }
+    ],
+    "resourceName": "surfforecastapi",
+    "apiName": "surfforecastapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "forecastlambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-surfsafari-dev-210839-authRole",
+        "unAuthRoleName": "amplify-surfsafari-dev-210839-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "forecastlambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

@@ -20,6 +20,12 @@
       },
       "auth": {
         "surfsafaricc1ab66d": {}
+      },
+      "function": {
+        "forecastlambda": {
+          "deploymentBucketName": "amplify-surfsafari-dev-210839-deployment",
+          "s3Key": "amplify-builds/forecastlambda-73424755326835536956-build.zip"
+        }
       }
     }
   }
