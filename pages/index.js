@@ -65,7 +65,6 @@ export default function Home() {
   //toggleMap changes the value of 'mapStyle', which triggers the below effect to actually change map content
   function toggleMap(newMapStyle) {
     setMapStyle(newMapStyle);
-    generateForecast();
   }
   useEffect(() => {
     if(pageIsMounted){

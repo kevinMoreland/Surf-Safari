@@ -1,21 +1,48 @@
 
-
 exports.handler = async (event) => {
     // TODO implement
-    const response = {
-        statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  }, 
-        body: JSON.stringify('Hello from Lambda!'),
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "*",
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Methods": "GET"
-        },
+    let response = {
+      statusCode: 200,
+      body: "",
+      headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Methods": "GET"
+      },
     };
-    return response;
+    var https = require('https');
+    const url = 'https://www.ndbc.noaa.gov/data/realtime2/41008.txt'
+
+    return new Promise((resolve, reject) => {
+      https.get(url, (res) => {
+        var { statusCode } = res;
+
+        let error;
+
+        if (statusCode !== 200) {
+          error = new Error('Request Failed.\n' +
+            `Status Code: ${statusCode}`);
+          console.error(error.message);
+          // consume response data to free up memory
+          res.resume();
+        }
+
+        res.setEncoding('utf8');
+
+        res.on('data', (chunk) => {
+          response.body += chunk;
+        });
+
+        res.on('end', () => {
+          try {
+            resolve(response);
+          } catch (e) {
+            reject(e.message);
+          }
+        });
+      }).on('error', (e) => {
+        reject(`Got error: ${e.message}`);
+      })
+    });
 };
