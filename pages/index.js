@@ -12,7 +12,6 @@ import { mapModes, availableMaps } from "../map/mapModes";
 
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
-import { generateForecast } from "../functions/ForecastGenerator.js"
 //Necessary for AWS Cognito for sign up/ sign in ------
 import { Amplify, Auth } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';

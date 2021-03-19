@@ -17,7 +17,7 @@ exports.handler = async (event) => {
     return new Promise((resolve, reject) => {
       https.get(url, (res) => {
         var { statusCode } = res;
-
+        let rawBody = "";
         let error;
 
         if (statusCode !== 200) {
@@ -31,11 +31,12 @@ exports.handler = async (event) => {
         res.setEncoding('utf8');
 
         res.on('data', (chunk) => {
-          response.body += chunk;
+          rawBody += chunk;
         });
 
         res.on('end', () => {
           try {
+            response.body = JSON.stringify(rawBody);
             resolve(response);
           } catch (e) {
             reject(e.message);

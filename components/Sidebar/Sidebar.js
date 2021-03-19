@@ -17,7 +17,7 @@ export default function Sidebar(props) {
     content = <SurfSpotContent onClose={props.onClose} content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.FORECAST) {
-    content = <ForecastContent />
+    content = <ForecastContent content={props.content}/>
   }
 
   //Careful! the order of the classes specified for <Paper> matters

@@ -7,7 +7,8 @@ const generateForecast = async () => {
 //  const url = 'https://x9txjb9yi5.execute-api.eu-west-1.amazonaws.com/staging/workout' + params;
   const url = 'https://oeywaj7qa0.execute-api.us-west-2.amazonaws.com/dev/forecast'
   const response = await fetch(url);
-  const data = await response.json();
+  console.log(response.json());
+  const data = await response;
 //  var activitiesArray = data.map(activity =>
 //    {var mappedTo = new Array(activityObjectElements.NUM_ELEMENTS);
 //     mappedTo[activityObjectElements.NAME] = activity.name;

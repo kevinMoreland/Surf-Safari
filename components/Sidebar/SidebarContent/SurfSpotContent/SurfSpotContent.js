@@ -6,6 +6,7 @@ import 'fontsource-roboto';
 import { createUser, updateUser } from "../../../../src/graphql/mutations";
 import { getUser } from "../../../../src/graphql/queries";
 import { mod, coordinatesAreEqual } from "../../../../functions/Math.js"
+import { generateForecast } from "../../../../functions/ForecastGenerator.js"
 
 import { useState, useEffect } from "react";
 import { Amplify, Auth} from 'aws-amplify';
@@ -141,7 +142,7 @@ export default function SurfSpotContent(props) {
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
-          <Button onClick={()=>alert("Changing content to weather info...")} variant="contained" color="primary">Get Forecast</Button>
+          <Button onClick={()=>{generateForecast(); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
         </div>
