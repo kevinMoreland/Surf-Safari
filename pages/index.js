@@ -14,6 +14,8 @@ import { mapModes, availableMaps } from "../map/mapModes";
 
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
+import ReactGA from 'react-ga';
+ReactGA.initialize('G-G69DXZQYKB');
 
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
@@ -37,6 +39,7 @@ export default function Home() {
 
   //When page first loads, set page mounted to true and initialize map
   useEffect(() => {
+  ReactGA.pageview("home page");
     setPageIsMounted(true);
     handleDialogClickOpen("Welcome to Surf Safari! (beta version)", "The goal of Surf Safari is to combine satellite imagery, swell data, weather data, and other useful information for assessing the surf potential of beaches together into one tool. You can use this to get a forecast for your local beach or discover new, remote surf locations around the world!")
     initializeMap(mapContainerDivName,
