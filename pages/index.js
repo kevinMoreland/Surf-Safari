@@ -39,8 +39,9 @@ export default function Home() {
 
   //When page first loads, set page mounted to true and initialize map
   useEffect(() => {
-  ReactGA.pageview(window.location.pathname + window.location.search);
     setPageIsMounted(true);
+    ReactGA.pageview("/");
+    console.log("page view hit...");
     handleDialogClickOpen("Welcome to Surf Safari! (beta version)", "The goal of Surf Safari is to combine satellite imagery, swell data, weather data, and other useful information for assessing the surf potential of beaches together into one tool. You can use this to get a forecast for your local beach or discover new, remote surf locations around the world!")
     initializeMap(mapContainerDivName,
                   mapStyle,
