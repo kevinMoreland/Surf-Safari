@@ -16,7 +16,7 @@ import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 import ReactGA from 'react-ga';
 ReactGA.initialize('UA-192919844-1');
-ReactGA.pageview(window.location.pathname + window.location.search);
+ReactGA.pageview("/");
 
 //home for the demo version
 export default function Home() {
