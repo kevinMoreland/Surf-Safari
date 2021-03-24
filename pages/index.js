@@ -15,7 +15,7 @@ import { mapModes, availableMaps } from "../map/mapModes";
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 import ReactGA from 'react-ga';
-ReactGA.initialize('G-G69DXZQYKB');
+ReactGA.initialize('UA-192976146-1');
 
 export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
