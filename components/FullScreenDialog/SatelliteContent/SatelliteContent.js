@@ -23,8 +23,7 @@ export default function SatelliteContent(props) {
               </form>
           <Button variant="contained"
                   color="primary"
-                  style={{float:'end'}}
-                  onClick={() => alert("Load satellite image...")}>Load Satellite Image Here at This Date</Button>
+                  style={{float:'end'}}>Load Satellite Image Here at This Date</Button>
         <img style={{width: '100%', paddingTop: '3vh'}} src="/satelliteGeneric.png"/>
         </div>
       </>)

@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField';
 import DialogTopBar from '../DialogTopBar/DialogTopBar.js'
 import Typography from '@material-ui/core/Typography';
 import { SignUp, SignOut } from '../../Authorization/Authorization.js'
-import { AuthState } from '@aws-amplify/ui-components';
 import 'fontsource-roboto';
 
 export default function LoginContent(props) {

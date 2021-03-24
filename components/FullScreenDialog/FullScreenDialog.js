@@ -18,8 +18,7 @@ export default function FullScreenDialog(props) {
     content = <SatelliteContent handleClose={props.handleClose}/>
   }
   else if(props.contentType == fullscreenDialogContentTypes.LOGIN) {
-    content = <LoginContent authState={props.authState}
-                            handleClose={props.handleClose}/>
+    content = <LoginContent handleClose={props.handleClose}/>
   }
   else if(props.contentType == fullscreenDialogContentTypes.CREATE_ACCOUNT) {
     content = <CreateAccountContent handleClose={props.handleClose}/>

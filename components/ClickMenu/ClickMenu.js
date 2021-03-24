@@ -5,25 +5,22 @@ import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/Fore
 import { generateForecast } from "../../functions/ForecastGenerator.js"
 
 export default function ClickMenu(props) {
-  //only allow option to save a spot if the user is logged in
-  let saveSpotContent = <></>
-  if(props.isLoggedIn) {
-    saveSpotContent = <p onClick={() =>
-                          {props.closePopup();
-                           props.setSideBar(
-                            new SurfSpotContentInput("", "", props.updateMapMarker, props.removeMapMarker, props.coordinates.lng, props.coordinates.lat),
-                            true);}}>
-                         Save Spot
-                      </p>
-  }
+  let saveSpotContent = <p onClick={() =>
+                        {props.closePopup();
+                         props.setSideBar(
+                          new SurfSpotContentInput("", "", props.updateMapMarker, props.removeMapMarker, props.coordinates.lng, props.coordinates.lat),
+                          true);}}>
+                       Save Spot
+                    </p>
   return (
     <div className={styles.clickMenuContainer}>
       {saveSpotContent}
       <p onClick={() => {generateForecast(); //TODO populate content input with something
+                         props.forecastDialog();
                          props.closePopup();
                          props.setSideBar(new ForecastContentInput(), true);}}>
                          Get Weather and Swell Forecast</p>
-      <p>Measure Distance</p>
+      <p onClick={()=>{props.measureDistanceDialog()}}> Measure Distance</p>
       <p onClick={() => {props.closePopup();
                          props.setFullScreenDialog(fullscreenDialogContentTypes.SATELLITE, true);}}>
                          View NASA Satellite Images</p>

@@ -106,21 +106,20 @@ function addMapMarker(coordinates) {
   markers.push(new Marker(coordinates, newMapBoxMarker));
   console.log(markers);
 }
-function updateMapOnLogInChange(isLoggedIn) {
-  setOnMapClick(isLoggedIn);
-}
 
-function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
+
+function renderClickMenuPlaceHolder(measureDistanceDialog, forecastDialog, coordinates) {
   //add the placeholder DOM that displays the menu box appearing onClick
   if(placeholder == null) {
     placeholder = document.createElement("div");
   }
 
   ReactDOM.render(<ClickMenu
-    isLoggedIn={isLoggedIn}
     updateMapMarker={(title, description) => updateMapMarker(coordinates, title, description)}
     closePopup={closePopup}
     coordinates={coordinates}
+    measureDistanceDialog={measureDistanceDialog}
+    forecastDialog={forecastDialog}
     removeMapMarker={() => removeMapMarker(coordinates)}
     setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
     setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
@@ -131,20 +130,20 @@ function closePopup() {
     onClickPopup.remove();
   }
 }
-function openPopup(isLoggedIn, coordinates) {
+function openPopup(measureDistanceDialog, forecastDialog, coordinates) {
   console.log(coordinates)
-  renderClickMenuPlaceHolder(isLoggedIn, coordinates);
+  renderClickMenuPlaceHolder(measureDistanceDialog, forecastDialog, coordinates);
   onClickPopup = new mapboxgl.Popup()
                  .setLngLat(coordinates)
                  .setDOMContent(placeholder)
                  .addTo(map);
 }
-function setOnMapClick(isLoggedIn) {
+function setOnMapClick(measureDistanceDialog, forecastDialog) {
   map.on("click", (e) => {
     var coordinates = e.lngLat;
     map.easeTo({center: coordinates});
     closePopup();
-    openPopup(isLoggedIn, coordinates);
+    openPopup(measureDistanceDialog, forecastDialog, coordinates);
   });
 }
 const fillAllMarkersFromCloud = async () => {
@@ -168,7 +167,7 @@ const fillAllMarkersFromCloud = async () => {
     }
 }
 
-function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
+function initializeMap(containerName, mapStyle, setSideBarInput, setFullScreenDialogInput, measureDistanceDialog, forecastDialog) {
   //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
   fillAllMarkersFromCloud();
 
@@ -188,7 +187,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
   map.keyboard.disable();
 
   //set the map click event
-  setOnMapClick(isLoggedIn);
+  setOnMapClick(measureDistanceDialog, forecastDialog);
 
   map.on("mouseenter", "data", function () {
     map.getCanvas().style.cursor = "pointer";
@@ -223,7 +222,6 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
 module.exports = {
   changeMapStyle,
   initializeMap,
-  updateMapOnLogInChange,
   mapContainerDivName,
   clearMapMarkers,
   fillAllMarkersFromCloud

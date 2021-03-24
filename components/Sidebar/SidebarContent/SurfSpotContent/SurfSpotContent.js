@@ -24,100 +24,6 @@ export default function SurfSpotContent(props) {
     setDescVal(props.content.description)
   }, [props.content]);
 
-  const removeSurfSpot = async (lng, lat) => {
-    const currentUser = await Auth.currentAuthenticatedUser();
-    try {
-      const response = await API.graphql({
-        query: getUser,
-        variables: { id: currentUser.attributes.sub },
-      });
-      if(response.data.getUser) {
-        console.log(response.data.getUser)
-        let existingSurfSpots = response.data.getUser.surfspots
-        let indexToSlice = -1;
-        for(let i = 0; i < existingSurfSpots.length; i ++){
-          if(coordinatesAreEqual({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat}, {lng: lng, lat: lat})) {
-            indexToSlice = i
-            break
-          }
-        }
-        if(indexToSlice == -1) {
-          alert("Could not remove surf spot becaust it could not be found")
-          return
-        }
-        existingSurfSpots.splice(indexToSlice, 1)
-        console.log("array:")
-        console.log(existingSurfSpots)
-        const result = await API.graphql({
-            query: updateUser,
-            variables: {
-                input: {
-                    id: currentUser.attributes.sub,
-                    surfspots: existingSurfSpots
-                },
-            },
-        });
-        console.log("response:")
-        console.log(response);
-      }
-    }
-    catch (err) {
-      let errMessage = "Error deleting surf spot"
-      if(err.errors.length > 0) {
-        errMessage = "We got an error deleting your surf spot: " + err.errors[0].message
-      }
-      alert(errMessage)
-      console.log(err);
-    }
-  }
-
-  const addSurfSpot = async (lng, lat, title, descr) => {
-    const currentUser = await Auth.currentAuthenticatedUser();
-    try {
-      const response = await API.graphql({
-        query: getUser,
-        variables: { id: currentUser.attributes.sub },
-      });
-      if(response.data.getUser) {
-        console.log(response.data.getUser)
-        let existingSurfSpots = response.data.getUser.surfspots
-        const result = await API.graphql({
-            query: updateUser,
-            variables: {
-                input: {
-                    id: currentUser.attributes.sub,
-                    surfspots: existingSurfSpots.concat({long: lng, lat: lat, name: title, description: descr})
-                },
-            },
-        });
-        console.log("response:")
-        console.log(response);
-      }
-      else {
-        //User couldn't be found because they haven't saved any spots yet. Save the first spot
-        const result = await API.graphql({
-            query: createUser,
-            variables: {
-                input: {
-                    id: currentUser.attributes.sub,
-                    surfspots: [{long: lng, lat: lat, name: title, description: descr}]
-                },
-            },
-        });
-        console.log("response:")
-        console.log(response);
-      }
-    }
-    catch (err) {
-      let errMessage = "Error saving data"
-      if(err.errors.length > 0) {
-        errMessage = "We got an error saving your data: " + err.errors[0].message
-      }
-      alert(errMessage)
-      console.log(err);
-    }
-  }
-
   return (
       <div className={styles.textContent}>
         <InputBase
@@ -129,7 +35,6 @@ export default function SurfSpotContent(props) {
           onChange={(e)=>{setTitleVal(e.target.value);}}
           multiline
           rowsMax={2}/>
-        <p style={{fontSize: 10}}>Longitude: {props.content.lng} Latitude: {props.content.lat}</p>
         <br/>
         <br/>
         <InputBase
@@ -142,9 +47,9 @@ export default function SurfSpotContent(props) {
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
-          <Button onClick={()=>{generateForecast(); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Forecast</Button>
-          <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
-          <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
+          <Button onClick={()=>{props.openAlertDiag("Weather and Surf Forecasting", "In the full version of Surf Safari, forecasts of swells and weather conditions will be available for most locations.")}} variant="contained" color="primary">Get Forecast</Button>
+          <Button onClick={()=>{props.content.updateMapMarker(titleVal, descVal); props.onClose();}} variant="contained" color="primary">Save</Button>
+          <Button onClick={()=>{props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
         </div>
       </div>)
 }
