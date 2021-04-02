@@ -20,7 +20,7 @@ ReactGA.pageview("/");
 
 //home for the demo version
 export default function Home() {
-  const [pageIsMounted, setPageIsMounted] = useState(false);
+  const [pageIsMounted, setPagasdfasdounted] = useState(false);
   const [mapStyle, setMapStyle] = useState(mapModes.OUTDOOR);
   const [sideBarInfo, setSideBarInfo] = useState({content: {}, isActive: false});
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
