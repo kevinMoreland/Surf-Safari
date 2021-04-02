@@ -88,7 +88,7 @@ function getNearestBuoy(latitude, longitude) {
 //getNearestBuoy().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
 
 exports.handler = async (event) => {
-  return getNearestBuoy();
+  return getNearestBuoy(0,0);
 };
 
 /*
