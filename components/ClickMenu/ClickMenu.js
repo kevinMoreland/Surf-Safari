@@ -2,7 +2,7 @@ import styles from './ClickMenu.module.css'
 import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
-import { generateForecast } from "../../functions/ForecastGenerator.js"
+import { generateForecast, getNearestBuoy } from "../../functions/ForecastGenerator.js"
 
 export default function ClickMenu(props) {
   //only allow option to save a spot if the user is logged in
@@ -19,7 +19,7 @@ export default function ClickMenu(props) {
   return (
     <div className={styles.clickMenuContainer}>
       {saveSpotContent}
-      <p onClick={() => {generateForecast(); //TODO populate content input with something
+      <p onClick={() => {generateForecast(); //TODO populate content input with
                          props.closePopup();
                          props.setSideBar(new ForecastContentInput(), true);}}>
                          Get Weather and Swell Forecast</p>

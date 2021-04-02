@@ -1,25 +1,96 @@
-const generateForecast = async () => {
-//  const params =  '?workoutLength=' + this.state.workoutLength
-//                + '&hasUpper='      + this.state.selectedExerciseGroups.includes(exerciseGroups.UPPER)
-//                + '&hasLower='      + this.state.selectedExerciseGroups.includes(exerciseGroups.LOWER)
-//                + '&hasCore='       + this.state.selectedExerciseGroups.includes(exerciseGroups.CORE)
-//                + '&restLevel='     + this.state.restLevel;
-//  const url = 'https://x9txjb9yi5.execute-api.eu-west-1.amazonaws.com/staging/workout' + params;
-  const url = 'https://oeywaj7qa0.execute-api.us-west-2.amazonaws.com/dev/forecast'
-  const response = await fetch(url);
-  console.log(response.json());
-  const data = await response;
-//  var activitiesArray = data.map(activity =>
-//    {var mappedTo = new Array(activityObjectElements.NUM_ELEMENTS);
-//     mappedTo[activityObjectElements.NAME] = activity.name;
-//     mappedTo[activityObjectElements.DESC] = activity.description;
-//     mappedTo[activityObjectElements.TIME_IN_SEC] = parseInt(activity.amountTime);
-//     mappedTo[activityObjectElements.NUM_REPS] = activity.numReps;
-//     mappedTo[activityObjectElements.NUM_SEC_TO_DO_REPS] = activity.numSecToDoReps;
-//     mappedTo[activityObjectElements.VIDEO_URL] = activity.videoURL;
-//     return mappedTo;});
-  console.log(data)
+var https = require('https');
+const haversine = require('haversine')
+
+function getHTTPRaw(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      var { statusCode } = res;
+      let rawBody = "";
+      let error;
+
+      if (statusCode !== 200) {
+        error = new Error('Request Failed.\n' +
+          `Status Code: ${statusCode}`);
+        console.error(error.message);
+        // consume response data to free up memory
+        res.resume();
+      }
+
+      res.setEncoding('utf8');
+
+      res.on('data', (chunk) => {
+        rawBody += chunk;
+      });
+
+      res.on('end', () => {
+        try {
+          response = rawBody;
+          resolve(response);
+        } catch (e) {
+          reject(e.message);
+        }
+      });
+    }).on('error', (e) => {
+      reject(`Got error: ${e.message}`);
+    })
+  });
+}
+
+function getDistanceBetweenCoords(coord1, coord2) {
+  const start = {
+    latitude: coord1.lat,
+    longitude: coord1.lng
+  }
+
+  const end = {
+    latitude: coord2.lat,
+    longitude: coord2.lng
+  }
+  dist = haversine(start, end, {unit: 'meter'})
+  return dist
+}
+
+function getNearestBuoy(latitude, longitude) {
+  let activeStationsPromise = getHTTPRaw("https://www.ndbc.noaa.gov/activestations.xml");
+  var parseString = require('xml2js').parseString;
+  let ndbcFileDirPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/");
+
+  let myCoordinates = {lat: latitude, lng: longitude}
+
+  return new Promise(function(resolve, reject) {
+    activeStationsPromise.then((res) => {
+      parseString(res,
+        function (err, result) {
+          let count = result['stations']['$']['count']
+          let min = -1;
+          let closestStation = -1;
+          for(let i = 0; i < count; i++) {
+            let currStation = result['stations']['station'][i]
+            let stationId = currStation['$']['id']
+            ndbcFileDirPromise.then((res) => {
+              currStationCoords = {lat: currStation['$']['lat'], lng: currStation['$']['lon']}
+              distance = getDistanceBetweenCoords(myCoordinates, currStationCoords)
+              if(min == -1 || distance < min) {
+                min = distance
+                closestStation = stationId;
+              }
+              if(i == count - 1) {
+                resolve(closestStation);
+              }
+            }).catch((error) => reject("Error checking if station has spec data."))
+          }
+
+        });
+    }).catch((error) => reject("Error retrieving active stations."))
+  });
+}
+//Example using the promise:
+//getNearestBuoy().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
+
+function generateForecast() {
+ getNearestBuoy().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
 }
 module.exports = {
-  generateForecast
+  generateForecast,
+  getNearestBuoy
 }
