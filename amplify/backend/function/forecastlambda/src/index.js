@@ -50,13 +50,25 @@ function getDistanceBetweenCoords(coord1, coord2) {
   return dist
 }
 
-function getNearestBuoy(latitude, longitude) {
+function getNearestBuoy(event) {
   let activeStationsPromise = getHTTPRaw("https://www.ndbc.noaa.gov/activestations.xml");
   var parseString = require('xml2js').parseString;
   let ndbcFileDirPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/");
 
-  let myCoordinates = {lat: latitude, lng: longitude}
+  let latitude = parseFloat(event.queryStringParameters.lat)
+  let longitude = parseFloat(event.queryStringParameters.lng)
 
+  let myCoordinates = {lat: latitude, lng: longitude}
+  let response = {
+        statusCode: 200,
+        body: "",
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Methods": "GET"
+        },
+      };
   return new Promise(function(resolve, reject) {
     activeStationsPromise.then((res) => {
       parseString(res,
@@ -64,18 +76,24 @@ function getNearestBuoy(latitude, longitude) {
           let count = result['stations']['$']['count']
           let min = -1;
           let closestStation = -1;
+          //loop through each buoy to find the closest one with .spec data
           for(let i = 0; i < count; i++) {
             let currStation = result['stations']['station'][i]
             let stationId = currStation['$']['id']
+            //check if the buoy with id 'stationId' has .spec data
             ndbcFileDirPromise.then((res) => {
               currStationCoords = {lat: currStation['$']['lat'], lng: currStation['$']['lon']}
               distance = getDistanceBetweenCoords(myCoordinates, currStationCoords)
-              if(min == -1 || distance < min) {
+
+              /* check if this station in this iteration of the for loop has .spec data.
+                 if it does, it is a potential closest buoy */
+              if((min == -1 || distance < min) && res.includes(stationId + ".spec")) {
                 min = distance
                 closestStation = stationId;
               }
               if(i == count - 1) {
-                resolve(closestStation);
+                response.body = JSON.stringify(closestStation + " at distance " + min + " meters");
+                resolve(response);
               }
             }).catch((error) => reject("Error checking if station has spec data."))
           }
@@ -88,53 +106,5 @@ function getNearestBuoy(latitude, longitude) {
 //getNearestBuoy().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
 
 exports.handler = async (event) => {
-  return getNearestBuoy(0,0);
+  return getNearestBuoy(event);
 };
-
-/*
-    let response = {
-      statusCode: 200,
-      body: "",
-      headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "*",
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Methods": "GET"
-      },
-    };
-    var https = require('https');
-    const url = 'https://www.ndbc.noaa.gov/data/realtime2/41008.txt'
-
-    return new Promise((resolve, reject) => {
-      https.get(url, (res) => {
-        var { statusCode } = res;
-        let rawBody = "";
-        let error;
-
-        if (statusCode !== 200) {
-          error = new Error('Request Failed.\n' +
-            `Status Code: ${statusCode}`);
-          console.error(error.message);
-          // consume response data to free up memory
-          res.resume();
-        }
-
-        res.setEncoding('utf8');
-
-        res.on('data', (chunk) => {
-          rawBody += chunk;
-        });
-
-        res.on('end', () => {
-          try {
-            response.body = JSON.stringify(rawBody);
-            resolve(response);
-          } catch (e) {
-            reject(e.message);
-          }
-        });
-      }).on('error', (e) => {
-        reject(`Got error: ${e.message}`);
-      })
-    });
-*/
