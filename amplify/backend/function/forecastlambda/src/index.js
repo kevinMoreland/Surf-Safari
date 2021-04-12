@@ -50,6 +50,10 @@ function getDistanceBetweenCoords(coord1, coord2) {
   return dist
 }
 
+function getStationForecast(stationId) {
+  let stationSpecPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/" + stationId + ".spec");
+}
+
 function getNearestBuoy(event) {
   let activeStationsPromise = getHTTPRaw("https://www.ndbc.noaa.gov/activestations.xml");
   var parseString = require('xml2js').parseString;
