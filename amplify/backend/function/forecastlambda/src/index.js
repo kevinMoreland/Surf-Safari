@@ -54,7 +54,53 @@ function getStationForecast(stationId) {
   let stationSpecPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/" + stationId + ".spec");
 }
 
-function getNearestBuoy(event) {
+class swellForecast {
+  constructor(waveHeight, period, direction, stationId, distance, coordinates) {
+    this.waveHeight = waveHeight;
+    this.period = period;
+    this.direction = direction;
+    this.stationId = stationId;
+    this.distance = distance;
+    this.coordinates = coordinates;
+  }
+}
+function parseBuoyData(buoyData, stationId, distance, coordinates) {
+  let lineNumber = 0;
+  let charPos = 0;
+  let colPos = 0;
+  let cols = ["year" , "month", "day", "hour", "minute",
+              "waveHeight", "swellHeight", "swellPeriod", "Wind Wave Height",
+              "Wind Wave Period", "Swell Direction", "Wind Wave Direction", "Steepness",
+              "Average Wave Period", "Dominant Period Swell Direction"];
+  let waveHeightIndex = 5;
+  let periodIndex = 7;
+  let directionIndex = 14;
+  //find length of third line, which contains nearest buoy data
+  let rowStart = 0;
+  let rowEnd = 0;
+  while(lineNumber < 3) {
+    if(buoyData.charAt(charPos) == '\n') {
+      lineNumber += 1;
+      if(lineNumber == 3)
+        rowEnd = charPos - 1;
+      else
+        rowStart = charPos + 1;
+    }
+    charPos += 1;
+  }
+
+  //Obtain the most recent buoy data
+  let mostRecentData = buoyData.substring(rowStart, rowEnd + 1).split(/[ ]+/);
+  console.log(mostRecentData)
+  return new swellForecast(mostRecentData[waveHeightIndex],
+                           mostRecentData[periodIndex],
+                           mostRecentData[directionIndex],
+                           stationId,
+                           distance,
+                           coordinates);
+}
+
+function getNearestBuoyForecast(event) {
   let activeStationsPromise = getHTTPRaw("https://www.ndbc.noaa.gov/activestations.xml");
   var parseString = require('xml2js').parseString;
   let ndbcFileDirPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/");
@@ -80,6 +126,7 @@ function getNearestBuoy(event) {
           let count = result['stations']['$']['count']
           let min = -1;
           let closestStation = -1;
+          let closestStationCoordinates = null;
           //loop through each buoy to find the closest one with .spec data
           for(let i = 0; i < count; i++) {
             let currStation = result['stations']['station'][i]
@@ -94,10 +141,14 @@ function getNearestBuoy(event) {
               if((min == -1 || distance < min) && res.includes(stationId + ".spec")) {
                 min = distance
                 closestStation = stationId;
+                closestStationCoordinates = currStationCoords;
               }
               if(i == count - 1) {
-                response.body = JSON.stringify(closestStation + " at distance " + min + " meters");
-                resolve(response);
+                stationDataPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/" + closestStation + ".spec");
+                stationDataPromise.then((res) =>{
+                  response.body = JSON.stringify(parseBuoyData(res, closestStation, min, closestStationCoordinates));
+                  resolve(response)
+                })
               }
             }).catch((error) => reject("Error checking if station has spec data."))
           }
@@ -107,8 +158,8 @@ function getNearestBuoy(event) {
   });
 }
 //Example using the promise:
-//getNearestBuoy().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
+//getNearestBuoyForecast().then((res) => console.log("nearest buoy station: " + res)).catch(error => console.log("Error: " + error));
 
 exports.handler = async (event) => {
-  return getNearestBuoy(event);
+  return getNearestBuoyForecast(event);
 };

@@ -135,16 +135,17 @@ function openPopup(isLoggedIn, coordinates) {
   console.log(coordinates)
   renderClickMenuPlaceHolder(isLoggedIn, coordinates);
   onClickPopup = new mapboxgl.Popup()
-                 .setLngLat(coordinates)
+                 .setLngLat(new mapboxgl.LngLat(coordinates.lng, coordinates.lat))
                  .setDOMContent(placeholder)
                  .addTo(map);
 }
 function setOnMapClick(isLoggedIn) {
   map.on("click", (e) => {
     var coordinates = e.lngLat;
-    map.easeTo({center: coordinates});
     closePopup();
+    getBeachAngle(e);
     openPopup(isLoggedIn, coordinates);
+    map.easeTo({center: coordinates});
   });
 }
 const fillAllMarkersFromCloud = async () => {
@@ -168,9 +169,155 @@ const fillAllMarkersFromCloud = async () => {
     }
 }
 
+function pointHasWater(screenX, screenY) {
+  var features = map.queryRenderedFeatures([screenX, screenY]);
+
+  // Limit the number of properties we're displaying for
+  // legibility and performance
+  var displayProperties = [
+    'sourceLayer',
+  ];
+  let isWater = false;
+  var displayFeatures = features.map(function (feat) {
+    var displayFeat = {};
+    displayProperties.forEach(function (prop) {
+      displayFeat[prop] = feat[prop];
+      if(displayFeat[prop] == "water") {
+        isWater = true;
+      }
+    });
+    return displayFeat;
+  });
+  return isWater;
+}
+//return -1 if below, 1 if above, 0 if on line
+//or if line is vertical, -1 for left, 1 for right
+function pointIsWhereToLine(lineX, lineY, lineSlopeRise, lineSlopeRun, x, y){
+  //if line has this x, what would its y on the line be?
+  //y - lineY = (lineSlopeRise/lineSlopeRun) * (x - lineX)
+  //y = (lineSlopeRise/lineSlopeRun) * (x - lineX) + lineY
+  //x = (y - lineY) / (lineSlopeRise/lineSlopeRun) + lineX
+  if(lineSlopeRun == 0) {
+    let xOnLine = (y - lineY) / (lineSlopeRise/lineSlopeRun) + lineX
+    if(x > xOnLine)
+      return 1
+    else if(x < xOnLine)
+      return -1
+    return 0
+  }
+  let yOnLine = (lineSlopeRise/lineSlopeRun) * (x - lineX) + lineY
+  console.log("y on line " + yOnLine)
+  console.log("slope: " + (lineSlopeRise/lineSlopeRun))
+  console.log("y: " + y)
+  console.log("x: " + x)
+  if(y < yOnLine)
+    return 1
+  else if(y > yOnLine)
+    return -1
+  return 0
+}
+function getBeachAngle(e) {
+  //circle equation:
+  //(x - a)^2 + (y - b)^2 = r^2
+  let xOfBeach = e.point.x
+  let yOfBeach = e.point.y
+  let mapBearing = map.getBearing(); //use to correct angle after equation
+  console.log("Map Bearing: " + map.getBearing())
+
+  let r = 100 //just an arbitrary value, should fit within most screens
+
+  //pick 12 points around circle
+  //x = sqrt(r^2 - (y - b)^2) + a
+  //y = sqrt(r^2 - (x - a)^2) + b
+  console.log("beach X: " + xOfBeach)
+  console.log("beach y: " + yOfBeach)
+  let points = [] //0.707
+  points.push({"x": xOfBeach + r, "y": yOfBeach});
+  points.push({"x": xOfBeach + (r * 0.707), "y": yOfBeach + (r * 0.707)});
+  points.push({"x": xOfBeach, "y": yOfBeach + r});
+  points.push({"x": xOfBeach - (r * 0.707), "y": yOfBeach + (r * 0.707)});
+  points.push({"x": xOfBeach - r, "y": yOfBeach});
+  points.push({"x": xOfBeach - (r * 0.707), "y": yOfBeach - (r * 0.707)});
+  points.push({"x": xOfBeach, "y": yOfBeach - r});
+  points.push({"x": xOfBeach + (r * 0.707), "y": yOfBeach - (r * 0.707)});
+
+  //find barrier between points in water and points on land, if it exists
+  let barrierPoints = []
+  let prevSection = null;
+  let valFirstSection = null;
+  let currentQuadrant = 1;
+  let waterDirection = "none";
+  for(let i = 0; i < points.length; i++) {
+    console.log("i vale: " + i)
+    let curPointHasWater = pointHasWater(points[i].x, points[i].y);
+    if(prevSection != curPointHasWater && curPointHasWater != null) {
+      if(prevSection != null) {
+          barrierPoints.push(i)
+          console.log("barrier point: " + points[i].x + " " + points[i].y)
+      }
+      if(prevSection == null) {
+        valFirstSection = curPointHasWater;
+      }
+      prevSection = curPointHasWater
+    }
+  }
+  //check if the last point is a barrier point, circle needs to wrap around
+  if(prevSection != valFirstSection) {
+    console.log("settings wrap arround: " + (points.length - 1));
+    barrierPoints.push(points.length - 1);
+  }
+
+  let numSections = barrierPoints.length;
+  if(numSections == 1) {
+    let sectionIsWater = prevSection
+    if(sectionIsWater)
+      console.log("Location is too far out to sea")
+    else {
+      console.log("Location is too far inland")
+    }
+  }
+  else if(numSections > 2) {
+    console.log("could not clearly read coast")
+  }
+  else if(numSections == 0) {
+    console.log("no points identified")
+  }
+  else {
+    //find direction of water
+    let referencePoint = -1;
+    if(barrierPoints[0] == barrierPoints[1] + 1)
+      referencePoint = (barrierPoints[0] + 1) % points.length
+    else if(barrierPoints[1] == barrierPoints[0] + 1)
+      referencePoint = (barrierPoints[1] + 1) % points.length
+    else
+      referencePoint = Math.floor((barrierPoints[0] + barrierPoints[1]) / 2);
+
+    console.log(numSections);
+    console.log(barrierPoints[0]);
+    console.log(barrierPoints[1]);
+    let beachSlope = -1 * (points[barrierPoints[0]].y - points[barrierPoints[1]].y) / (points[barrierPoints[0]].x - points[barrierPoints[1]].x)
+    console.log("beach slope: " + beachSlope)
+
+    console.log(referencePoint +  " is reference")
+    let belowIsWater = pointIsWhereToLine(points[barrierPoints[0]].x, points[barrierPoints[0]].y,
+                                          points[barrierPoints[0]].y - points[barrierPoints[1]].y,
+                                          points[barrierPoints[0]].x - points[barrierPoints[1]].x,
+                                          points[referencePoint].x,
+                                          points[referencePoint].y)
+
+    if(!pointHasWater(points[referencePoint].x, points[referencePoint].y))
+      console.log("reference is to land")
+      belowIsWater = !belowIsWater
+
+    console.log("below is water: " + belowIsWater)
+  }
+}
+
 function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, setFullScreenDialogInput) {
   //TODO: let initalizeMap.js accept from main a function that will read from the database all surfspots, and populate 'markers' array
-  fillAllMarkersFromCloud();
+  if(isLoggedIn) {
+    fillAllMarkersFromCloud();
+  }
 
   //save these function and objects in this class so I can use them for later
   setSideBar = setSideBarInput
@@ -226,5 +373,5 @@ module.exports = {
   updateMapOnLogInChange,
   mapContainerDivName,
   clearMapMarkers,
-  fillAllMarkersFromCloud
+  fillAllMarkersFromCloud,
 }

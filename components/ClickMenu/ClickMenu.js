@@ -2,8 +2,7 @@ import styles from './ClickMenu.module.css'
 import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
-import { getForecast } from "../../functions/ForecastGetter.js"
-
+import { getForecast } from '../../functions/ForecastGetter.js'
 export default function ClickMenu(props) {
   //only allow option to save a spot if the user is logged in
   let saveSpotContent = <></>
