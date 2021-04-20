@@ -6,7 +6,6 @@ import 'fontsource-roboto';
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { loadCSS } from 'fg-loadcss';
-import ArrowIcon from './ArrowIcon.js';
 
 export default function DayCast(props) {
 
@@ -15,10 +14,17 @@ export default function DayCast(props) {
         <div style={{display: "flex", alignItems: "center"}}>
           <div style={{width: "50%", verticalAlign: "center", textAlign: "center"}}>
             <img src="/weatherIcons/wi-cloudy.svg" style={{width: "75%", marginBottom: "-2vw"}}/>
-            <Typography variant="h5">60°F/85°F</Typography>
             <Typography variant="body1">Mostly Cloudy</Typography>
 
           </div>
+          <div style={{width: "50%"}}>
+            <Typography variant="h5">60°F/85°F</Typography>
+          </div>
+
+        </div>
+      </Paper>)
+}
+/*
           <div style={{width: "50%"}}>
             <Typography variant="body1">Swells:</Typography>
             <div style={{display:"flex"}}>
@@ -34,6 +40,4 @@ export default function DayCast(props) {
               <ArrowIcon direction={268} />
             </div>
           </div>
-        </div>
-      </Paper>)
-}
+*/
