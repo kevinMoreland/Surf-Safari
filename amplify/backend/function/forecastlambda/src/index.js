@@ -145,7 +145,7 @@ function getNearestBuoyForecast(event) {
               }
               if(i == count - 1) {
                 stationDataPromise = getHTTPRaw("https://www.ndbc.noaa.gov/data/realtime2/" + closestStation + ".spec");
-                stationDataPromise.then((res) =>{
+                stationDataPromise.then((res) => {
                   response.body = JSON.stringify(parseBuoyData(res, closestStation, min, closestStationCoordinates));
                   resolve(response)
                 })

@@ -7,6 +7,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import contentTypes from './contentTypes.js'
 import SurfSpotContent from './SidebarContent/SurfSpotContent/SurfSpotContent.js'
 import ForecastContent from './SidebarContent/ForecastContent/ForecastContent.js'
+import BuoyContent from './SidebarContent/BuoyContent/BuoyContent.js'
+
 import 'fontsource-roboto';
 
 //props.contentType can be "forecast", "spotInfo", "editableSpot"
@@ -18,6 +20,10 @@ export default function Sidebar(props) {
   }
   else if(props.content.contentType == contentTypes.FORECAST) {
     content = <ForecastContent content={props.content}/>
+  }
+  else if(props.content.contentType == contentTypes.BUOY) {
+    console.log(props.content)
+    content = <BuoyContent content={props.content}/>
   }
 
   //Careful! the order of the classes specified for <Paper> matters

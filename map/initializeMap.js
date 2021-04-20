@@ -143,7 +143,6 @@ function setOnMapClick(isLoggedIn) {
   map.on("click", (e) => {
     var coordinates = e.lngLat;
     closePopup();
-    getBeachAngle(e);
     openPopup(isLoggedIn, coordinates);
     map.easeTo({center: coordinates});
   });
@@ -157,8 +156,6 @@ const fillAllMarkersFromCloud = async () => {
       });
       if(response.data.getUser) {
         let existingSurfSpots = response.data.getUser.surfspots
-        console.log("Read this:")
-        console.log(response)
         for(let i = 0; i < existingSurfSpots.length; i++) {
           updateMapMarker({lng: existingSurfSpots[i].long, lat: existingSurfSpots[i].lat}, existingSurfSpots[i].name, existingSurfSpots[i].description)
         }
