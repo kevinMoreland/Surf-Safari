@@ -142,6 +142,7 @@ export default function SurfSpotContent(props) {
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
+          <Button onClick={()=>{getForecast(props.content.lng, props.content.lat); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Buoy Data</Button>
           <Button onClick={()=>{getForecast(props.content.lng, props.content.lat); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
