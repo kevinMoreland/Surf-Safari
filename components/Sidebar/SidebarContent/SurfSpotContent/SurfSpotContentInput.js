@@ -1,7 +1,7 @@
 import contentTypes from "../../contentTypes.js"
 
 export default class {
-  constructor(title, description, updateMapMarker, removeMapMarker, lng, lat) {
+  constructor(title, description, updateMapMarker, removeMapMarker, setSideBar, lng, lat) {
    this.contentType = contentTypes.SPOT_INFO;
    this.title = title;
    this.description = description;
@@ -14,5 +14,8 @@ export default class {
 
    //Removes map marker from UI
    this.removeMapMarker = removeMapMarker;
+
+   //set sidebar
+   this.setSideBar = setSideBar
   }
 }

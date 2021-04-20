@@ -7,6 +7,7 @@ import { createUser, updateUser } from "../../../../src/graphql/mutations";
 import { getUser } from "../../../../src/graphql/queries";
 import { mod, coordinatesAreEqual } from "../../../../functions/Math.js"
 import { getForecast } from "../../../../functions/ForecastGetter.js"
+import BuoyContentInput from "../BuoyContent/BuoyContentInput.js"
 
 import { useState, useEffect } from "react";
 import { Amplify, Auth} from 'aws-amplify';
@@ -142,7 +143,10 @@ export default function SurfSpotContent(props) {
           multiline
           rowsMax={20}/>
         <div className={styles.buttons}>
-          <Button onClick={()=>{getForecast(props.content.lng, props.content.lat); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Buoy Data</Button>
+          <Button onClick={()=>{
+            getForecast(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
+            props.content.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true)
+                    }} variant="contained" color="primary">Get Buoy Data</Button>
           <Button onClick={()=>{getForecast(props.content.lng, props.content.lat); alert("Changing content to weather info...");}} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>

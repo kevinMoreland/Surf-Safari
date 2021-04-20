@@ -95,6 +95,7 @@ function addMapMarker(coordinates) {
                                               surfSpotDesc,
                                               (title, description) => updateMapMarker(coordinates, title, description),
                                               () => removeMapMarker(coordinates),
+                                              setSideBar,
                                               coordinates.lng,
                                               coordinates.lat)
     setSideBar(sideBarContent, true);
