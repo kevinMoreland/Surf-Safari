@@ -147,10 +147,13 @@ export default function SurfSpotContent(props) {
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>{
-            getBuoy(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
             props.content.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true)
+            getBuoy(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
                     }} variant="contained" color="primary">Get Buoy Data</Button>
-          <Button onClick={()=>{props.content.setSideBar(new ForecastContentInput(), true)}} variant="contained" color="primary">Get Forecast</Button>
+          <Button onClick={()=>{
+            props.content.setSideBar(new ForecastContentInput(null), true)
+            getForecast(props.content.lng, props.content.lat).then((data) => {console.log("HERE \n"); props.content.setSideBar(new ForecastContentInput(data), true)})
+                    }} variant="contained" color="primary">Get Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
         </div>

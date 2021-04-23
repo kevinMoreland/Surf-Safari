@@ -4,6 +4,7 @@ import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/Surf
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
 import BuoyContentInput from "../Sidebar/SidebarContent/BuoyContent/BuoyContentInput.js"
 import { getBuoy } from '../../functions/BuoyGetter.js'
+import { getForecast } from '../../functions/ForecastGetter.js'
 export default function ClickMenu(props) {
   //only allow option to save a spot if the user is logged in
   let saveSpotContent = <></>
@@ -20,7 +21,8 @@ export default function ClickMenu(props) {
     <div className={styles.clickMenuContainer}>
       {saveSpotContent}
       <p onClick={() => {props.closePopup();
-                         props.setSideBar(new ForecastContentInput(), true);}}>
+                         getForecast(props.coordinates.lng, props.coordinates.lat).then((data) => props.setSideBar(new ForecastContentInput(data), true))
+                         props.setSideBar(new ForecastContentInput(null), true)}}>
                          Get Weather Forecast</p>
       <p onClick={() => {props.closePopup();
                          getBuoy(props.coordinates.lng, props.coordinates.lat).then((data) => props.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
