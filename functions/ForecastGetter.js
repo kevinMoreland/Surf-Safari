@@ -9,7 +9,7 @@ let getForecast = async (lon, lat) => {
   output = []
   console.log(data.list)
   for(let i = 0; i < data.list.length; i ++) {
-    output.push({weather: data.list[i].weather[0].main, weatherDesc: data.list[i].weather[0].description, hi: Math.trunc(data.list[i].temp.max - 273.15), lo: Math.trunc(data.list[i].temp.min - 273.15)})
+    output.push({weather: data.list[i].weather[0].main, icon: data.list[i].weather[0].icon, weatherDesc: data.list[i].weather[0].description, hi: (data.list[i].temp.max - 273.15).toFixed(1), lo: (data.list[i].temp.min - 273.15).toFixed(1)})
   }
   return output;
 }

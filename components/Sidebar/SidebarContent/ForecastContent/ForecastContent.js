@@ -10,7 +10,7 @@ export default function ForecastContent(props) {
   if(props.content.weatherArray != null) {
     content = []
     for(let i = 0; i < props.content.weatherArray.length; i++) {
-      content.push(<DayCast />)
+      content.push(<DayCast weather={props.content.weatherArray[i]}/>)
     }
   }
   return (

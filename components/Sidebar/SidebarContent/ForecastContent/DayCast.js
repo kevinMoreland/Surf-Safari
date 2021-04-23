@@ -13,31 +13,14 @@ export default function DayCast(props) {
       <Paper elevation={2} square={true} style={{marginTop: "5px"}}>
         <div style={{display: "flex", alignItems: "center"}}>
           <div style={{width: "50%", verticalAlign: "center", textAlign: "center"}}>
-            <img src="/weatherIcons/wi-cloudy.svg" style={{width: "75%", marginBottom: "-2vw"}}/>
-            <Typography variant="body1">Mostly Cloudy</Typography>
+            <img src={"http://openweathermap.org/img/wn/" + props.weather.icon +"@2x.png"} style={{width: "75%", marginBottom: "-2vw"}}/>
+            <Typography variant="body1">{props.weather.weatherDesc}</Typography>
 
           </div>
           <div style={{width: "50%"}}>
-            <Typography variant="h5">60°F/85°F</Typography>
+            <Typography variant="h5">{props.weather.lo}°C/{props.weather.hi}°C</Typography>
           </div>
 
         </div>
       </Paper>)
 }
-/*
-          <div style={{width: "50%"}}>
-            <Typography variant="body1">Swells:</Typography>
-            <div style={{display:"flex"}}>
-              <Typography variant="body1">3.1ft 15s 187°</Typography>
-              <ArrowIcon direction={187} />
-            </div>
-            <div style={{display:"flex"}}>
-              <Typography variant="body1">1.8ft 11s 260°</Typography>
-              <ArrowIcon direction={260} />
-            </div>
-            <div style={{display:"flex"}}>
-              <Typography variant="body1">2.1ft 9s 268°</Typography>
-              <ArrowIcon direction={268} />
-            </div>
-          </div>
-*/
