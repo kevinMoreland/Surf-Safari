@@ -2,11 +2,9 @@ import styles from '../../Sidebar.module.css'
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link'
 import 'fontsource-roboto';
-import { getForecast } from "../../../../functions/ForecastGetter.js"
 import ArrowIcon from './ArrowIcon.js';
 
 export default function BuoyContent(props) {
-  //getForecast(props.content.lng, props.content.lat);
   let content = <>
               <Typography variant="h4">Nearest Buoy Data</Typography>
               <br />
@@ -29,6 +27,3 @@ export default function BuoyContent(props) {
         {content}
       </div>)
 }
-/*
-getForecast(props.coordinates.lng, props.coordinates.lat);
-*/

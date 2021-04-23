@@ -1,6 +1,6 @@
 var https = require('https');
 
-let getForecast = async (lng, lat) => {
+let getBuoy = async (lng, lat) => {
   const params = '?lat=' + lat + '&lng=' + lng
 
   const url = 'https://oeywaj7qa0.execute-api.us-west-2.amazonaws.com/dev/forecast' + params;
@@ -9,5 +9,5 @@ let getForecast = async (lng, lat) => {
   return data;
 }
 module.exports = {
-  getForecast
+  getBuoy
 }
