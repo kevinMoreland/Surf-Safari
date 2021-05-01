@@ -3,6 +3,7 @@ import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
 import BuoyContentInput from "../Sidebar/SidebarContent/BuoyContent/BuoyContentInput.js"
+import SatteliteContentInput from "../FullScreenDialog/SatelliteContent/SatelliteContentInput.js"
 import { getBuoy } from '../../functions/BuoyGetter.js'
 import { getForecast } from '../../functions/ForecastGetter.js'
 export default function ClickMenu(props) {
@@ -30,7 +31,7 @@ export default function ClickMenu(props) {
                          Get Buoy Data</p>
       <p>Measure Distance</p>
       <p onClick={() => {props.closePopup();
-                         props.setFullScreenDialog(fullscreenDialogContentTypes.SATELLITE, true);}}>
+                         props.setFullScreenDialog(new SatteliteContentInput(props.coordinates.lng, props.coordinates.lat, "2018-01-01"), true);}}>
                          View NASA Satellite Images</p>
     </div>)
 }

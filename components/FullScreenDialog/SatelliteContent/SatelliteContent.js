@@ -25,7 +25,7 @@ export default function SatelliteContent(props) {
                   color="primary"
                   style={{float:'end'}}
                   onClick={() => alert("Load satellite image...")}>Load Satellite Image Here at This Date</Button>
-        <img style={{width: '100%', paddingTop: '3vh'}} src="/satelliteGeneric.png"/>
+        <img style={{width: '100%', paddingTop: '3vh'}} src={"https://api.nasa.gov/planetary/earth/imagery?lon=" + props.content.lng + "&lat=" + props.content.lat + "&date=" + props.content.date + "&dim=0.15&api_key=mchZhjYmtPYa9GpCmPCwRDlL5h8waPmfurrWxPDc"}/>
         </div>
       </>)
 }

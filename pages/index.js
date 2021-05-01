@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from '../styles/Home.module.css'
 import Sidebar from "../components/Sidebar/Sidebar.js"
 
+import LoginContentInput from "../components/FullScreenDialog/LoginContent/LoginContentInput.js"
 import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js"
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
@@ -23,7 +24,7 @@ export default function Home() {
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [mapStyle, setMapStyle] = useState(mapModes.OUTDOOR);
   const [sideBarInfo, setSideBarInfo] = useState({content: {}, isActive: false});
-  const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({contentType: "", isActive: false});
+  const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({content: {}, isActive: false});
   const [authState, setAuthState] = useState();
 
   //When page first loads, set page mounted to true and initialize map
@@ -33,7 +34,7 @@ export default function Home() {
                   mapStyle,
                   authState == AuthState.SignedIn,
                   (a, b) => setSideBarInfo({content: a, isActive: b}),
-                  (a, b) => setFullScreenDialogInfo({contentType: a, isActive: b}));
+                  (a, b) => setFullScreenDialogInfo({content: a, isActive: b}));
   }, []);
 
   //When page first loads, set auth state
@@ -87,8 +88,9 @@ export default function Home() {
 
       <FullScreenDialog
         contentType={fullScreenDialogInfo.contentType}
-        handleClose={() => setFullScreenDialogInfo({contentType: fullScreenDialogInfo.contentType, isActive: false})}
+        handleClose={() => setFullScreenDialogInfo({content: fullScreenDialogInfo.content, isActive: false})}
         open={fullScreenDialogInfo.isActive}
+        content={fullScreenDialogInfo.content}
         authState={authState}
         />
       <Sidebar
@@ -102,7 +104,7 @@ export default function Home() {
         </main>
 
         <div className={styles.profileIconContainer}>
-          <ProfileButton handleClick={() => setFullScreenDialogInfo({contentType: fullScreenDialogContentTypes.LOGIN, isActive: true})}/>
+          <ProfileButton handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
         </div>
         <div className={styles.miniMapContainer}>
           <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={0} availableMaps={availableMaps}/>

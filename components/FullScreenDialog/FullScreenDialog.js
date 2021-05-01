@@ -14,14 +14,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialog(props) {
 
   let content = <p>Content not found.</p>
-  if(props.contentType == fullscreenDialogContentTypes.SATELLITE) {
-    content = <SatelliteContent handleClose={props.handleClose}/>
+  if(props.content.contentType == fullscreenDialogContentTypes.SATELLITE) {
+    content = <SatelliteContent content={props.content} handleClose={props.handleClose}/>
   }
-  else if(props.contentType == fullscreenDialogContentTypes.LOGIN) {
+  else if(props.content.contentType == fullscreenDialogContentTypes.LOGIN) {
     content = <LoginContent authState={props.authState}
                             handleClose={props.handleClose}/>
   }
-  else if(props.contentType == fullscreenDialogContentTypes.CREATE_ACCOUNT) {
+  else if(props.content.contentType == fullscreenDialogContentTypes.CREATE_ACCOUNT) {
     content = <CreateAccountContent handleClose={props.handleClose}/>
   }
   return (

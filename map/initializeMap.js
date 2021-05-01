@@ -123,7 +123,7 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
     closePopup={closePopup}
     coordinates={coordinates}
     removeMapMarker={() => removeMapMarker(coordinates)}
-    setFullScreenDialog={(contentType, isActive) => setFullScreenDialog(contentType, isActive)}
+    setFullScreenDialog={(content, isActive) => setFullScreenDialog(content, isActive)}
     setSideBar={(content, isActive) => setSideBar(content, isActive)}/>,
     placeholder);
 }
