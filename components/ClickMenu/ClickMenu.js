@@ -30,8 +30,11 @@ export default function ClickMenu(props) {
                          props.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true);}}>
                          Get Buoy Data</p>
       <p>Measure Distance</p>
-      <p onClick={() => {props.closePopup();
-                         props.setFullScreenDialog(new SatteliteContentInput(props.coordinates.lng, props.coordinates.lat, "2018-01-01"), true);}}>
-                         View NASA Satellite Images</p>
+      <p onClick={() => {let viewHeight = 1250.726;
+                         window.open('https://earth.google.com/web/@' + props.coordinates.lat + ',' + props.coordinates.lng + ',' +viewHeight + 'a,666.616d,35y,0h,45t,0r', '_blank');}}>
+                         View Google Earth Here</p>
+       <p onClick={() => {let viewHeight = 1250.726;
+                          window.open('https://www.google.com/maps/@' + props.coordinates.lat + ',' + props.coordinates.lng +',' + viewHeight +'m/data=!3m1!1e3', '_blank');}}>
+                          View Google Maps Here</p>
     </div>)
 }
