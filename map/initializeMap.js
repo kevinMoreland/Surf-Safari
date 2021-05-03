@@ -22,9 +22,13 @@ let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitializ
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
 let map = null
 
+//measure distance markers
+let measureDistMarkers = []
+
 //variables for the click menu DOM content
 let placeholder = null
 let onClickPopup = null
+let onMeasureDistMode = false;
 
 function changeMapStyle(mapStyle) {
   map.setStyle(mapStyle);
@@ -121,6 +125,7 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
     isLoggedIn={isLoggedIn}
     updateMapMarker={(title, description) => updateMapMarker(coordinates, title, description)}
     closePopup={closePopup}
+    setMeasureDistanceMode={(a) => {onMeasureDistMode = a}}
     coordinates={coordinates}
     removeMapMarker={() => removeMapMarker(coordinates)}
     setFullScreenDialog={(content, isActive) => setFullScreenDialog(content, isActive)}
@@ -140,13 +145,38 @@ function openPopup(isLoggedIn, coordinates) {
                  .setDOMContent(placeholder)
                  .addTo(map);
 }
+
+let mapClickFunc = (e, isLoggedIn) => {
+                       var coordinates = e.lngLat;
+                       if(onMeasureDistMode) {
+                         closePopup();
+                         if(measureDistMarkers.length == 2) {
+                            alert("disance is...")
+                            onMeasureDistMode = false;
+                            measureDistMarkers[0].mapBoxMarkerObj.remove();
+                            measureDistMarkers[1].mapBoxMarkerObj.remove();
+                            measureDistMarkers = [];
+                         }
+                         else {
+                           if(measureDistMarkers.length == 0 ||
+                              (measureDistMarkers.length == 1 &&
+                              measureDistMarkers[0].mapBoxMarkerObj.getLngLat() != e.lngLat)) {
+                              let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
+                                                                    .setLngLat(coordinates)
+                                                                    .addTo(map);
+                              measureDistMarkers.push(new Marker(e.lngLat, newMapBoxMarker))
+                           }
+                         }
+                         console.log("measuring distance...")
+                       }
+                       else {
+                         closePopup();
+                         openPopup(isLoggedIn, coordinates);
+                         map.easeTo({center: coordinates});
+                       }
+                     }
 function setOnMapClick(isLoggedIn) {
-  map.on("click", (e) => {
-    var coordinates = e.lngLat;
-    closePopup();
-    openPopup(isLoggedIn, coordinates);
-    map.easeTo({center: coordinates});
-  });
+  map.on("click", (e) => {mapClickFunc(e, isLoggedIn)});
 }
 const fillAllMarkersFromCloud = async () => {
     const currentUser = await Auth.currentAuthenticatedUser();
