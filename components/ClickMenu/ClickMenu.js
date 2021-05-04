@@ -3,6 +3,7 @@ import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
 import BuoyContentInput from "../Sidebar/SidebarContent/BuoyContent/BuoyContentInput.js"
+import DistanceContentInput from "../Sidebar/SidebarContent/DistanceContent/DistanceContentInput.js"
 import SatteliteContentInput from "../FullScreenDialog/SatelliteContent/SatelliteContentInput.js"
 import { getBuoy } from '../../functions/BuoyGetter.js'
 import { getForecast } from '../../functions/ForecastGetter.js'
@@ -29,7 +30,9 @@ export default function ClickMenu(props) {
                          getBuoy(props.coordinates.lng, props.coordinates.lat).then((data) => props.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
                          props.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true);}}>
                          Get Buoy Data</p>
-      <p onClick={() => {props.setMeasureDistanceMode(true)}}>Measure Distance</p>
+      <p onClick={() => {props.closePopup();
+                         props.setOnMeasureDistMode(true);
+                         props.setSideBar(new DistanceContentInput(props.measureDistPoints, props.setSideBar, () => props.setOnMeasureDistMode(false)), true)}}>Measure Distance</p>
       <p onClick={() => {let viewHeight = 1250.726;
                          window.open('https://earth.google.com/web/@' + props.coordinates.lat + ',' + props.coordinates.lng + ',' +viewHeight + 'a,666.616d,35y,0h,45t,0r', '_blank');}}>
                          View Google Earth Here</p>

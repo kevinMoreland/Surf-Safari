@@ -8,6 +8,7 @@ import contentTypes from './contentTypes.js'
 import SurfSpotContent from './SidebarContent/SurfSpotContent/SurfSpotContent.js'
 import ForecastContent from './SidebarContent/ForecastContent/ForecastContent.js'
 import BuoyContent from './SidebarContent/BuoyContent/BuoyContent.js'
+import DistanceContent from './SidebarContent/DistanceContent/DistanceContent.js'
 
 import 'fontsource-roboto';
 
@@ -22,17 +23,25 @@ export default function Sidebar(props) {
     content = <ForecastContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.BUOY) {
-    console.log(props.content)
     content = <BuoyContent content={props.content}/>
   }
-
+  else if(props.content.contentType == contentTypes.DISTANCE) {
+    content = <DistanceContent content={props.content}/>
+  }
+  function handleClose() {
+    if(props.content.beforeClose != null){
+      props.content.beforeClose();
+    }
+    props.onClose();
+  }
   //Careful! the order of the classes specified for <Paper> matters
   return (
     <Paper className={(props.active ? styles.active : styles.inactive) + " " + styles.sidebar}
            elevation={3}
            square={true}>
       <div className={styles.closeButton}>
-        <CloseIcon onClick={props.onClose} fontSize="large"/>
+        <CloseIcon onClick={handleClose}
+          fontSize="large"/>
       </div>
       {content}
     </Paper>)

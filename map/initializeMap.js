@@ -4,6 +4,7 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 import SurfSpotContentInput from "../components/Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
+
 import Marker from "./Marker.js"
 import { API } from "@aws-amplify/api";
 import { Auth} from 'aws-amplify';
@@ -21,6 +22,7 @@ let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
 let map = null
+let measureDistPoints = []
 
 //measure distance markers
 let measureDistMarkers = []
@@ -125,7 +127,8 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
     isLoggedIn={isLoggedIn}
     updateMapMarker={(title, description) => updateMapMarker(coordinates, title, description)}
     closePopup={closePopup}
-    setMeasureDistanceMode={(a) => {onMeasureDistMode = a}}
+    measureDistPoints={measureDistPoints}
+    setOnMeasureDistMode={setOnMeasureDistMode}
     coordinates={coordinates}
     removeMapMarker={() => removeMapMarker(coordinates)}
     setFullScreenDialog={(content, isActive) => setFullScreenDialog(content, isActive)}
@@ -146,28 +149,34 @@ function openPopup(isLoggedIn, coordinates) {
                  .addTo(map);
 }
 
+function setOnMeasureDistMode(isOn) {
+  onMeasureDistMode = isOn;
+  console.log("setting onmeasure dist mode to " + isOn);
+  if(!isOn) {
+    for(let i = 0; i < measureDistMarkers.length; i++) {
+      let m = measureDistMarkers[i]
+      if(m.mapBoxMarkerObj != null) {
+        m.mapBoxMarkerObj.remove();
+      }
+    }
+    measureDistMarkers = [];
+  }
+}
+
 let mapClickFunc = (e, isLoggedIn) => {
                        var coordinates = e.lngLat;
+                       console.log("onMeasureDistMode: " + onMeasureDistMode)
                        if(onMeasureDistMode) {
-                         closePopup();
-                         if(measureDistMarkers.length == 2) {
-                            alert("disance is...")
-                            onMeasureDistMode = false;
-                            measureDistMarkers[0].mapBoxMarkerObj.remove();
-                            measureDistMarkers[1].mapBoxMarkerObj.remove();
-                            measureDistMarkers = [];
+                         if(measureDistMarkers.length == 0 ||
+                            (measureDistMarkers.length == 1 &&
+                            measureDistMarkers[0].mapBoxMarkerObj.getLngLat().lat != e.lngLat.lat &&
+                            measureDistMarkers[0].mapBoxMarkerObj.getLngLat().lng != e.lngLat.lng)) {
+                            let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
+                                                                  .setLngLat(coordinates)
+                                                                  .addTo(map);
+                            measureDistMarkers.push(new Marker(e.lngLat, newMapBoxMarker))
+                            measureDistPoints.push(e.lngLat);
                          }
-                         else {
-                           if(measureDistMarkers.length == 0 ||
-                              (measureDistMarkers.length == 1 &&
-                              measureDistMarkers[0].mapBoxMarkerObj.getLngLat() != e.lngLat)) {
-                              let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
-                                                                    .setLngLat(coordinates)
-                                                                    .addTo(map);
-                              measureDistMarkers.push(new Marker(e.lngLat, newMapBoxMarker))
-                           }
-                         }
-                         console.log("measuring distance...")
                        }
                        else {
                          closePopup();

@@ -1,1 +1,1 @@
-export default {FORECAST: "forecast", SPOT_INFO: "spotInfo", BUOY: "buoy"}
+export default {FORECAST: "forecast", SPOT_INFO: "spotInfo", BUOY: "buoy", DISTANCE: "distance"}
