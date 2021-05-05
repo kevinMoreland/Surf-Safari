@@ -1,9 +1,9 @@
 import contentTypes from "../../contentTypes.js"
-
+import { pointsDistance } from "../../../../functions/Math.js"
 export default class {
-  constructor(points, setSideBar, beforeClose) {
+  constructor(pointsDistance, setSideBar, beforeClose) {
    this.contentType = contentTypes.DISTANCE;
-   this.points = points;
+   this.pointsDistance = pointsDistance;
 
    //set sidebar
    this.setSideBar = setSideBar

@@ -11,9 +11,14 @@ import { useState, useEffect } from "react";
 import { Amplify, Auth} from 'aws-amplify';
 import { API } from "@aws-amplify/api";
 
+
 export default function DistanceContent(props) {
+  let content = "Select two points..."
+  if(props.content.pointsDistance > 0) {
+   content = "Distance: "+ props.content.pointsDistance + " miles"
+  }
   return (
       <div className={styles.textContent}>
-        <Typography variant="body1">Points: {props.content.points}</Typography>
+        <Typography variant="body1">{content}</Typography>
       </div>)
 }

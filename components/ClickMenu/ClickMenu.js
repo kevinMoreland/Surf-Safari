@@ -32,7 +32,7 @@ export default function ClickMenu(props) {
                          Get Buoy Data</p>
       <p onClick={() => {props.closePopup();
                          props.setOnMeasureDistMode(true);
-                         props.setSideBar(new DistanceContentInput(props.measureDistPoints, props.setSideBar, () => props.setOnMeasureDistMode(false)), true)}}>Measure Distance</p>
+                         props.setSideBar(new DistanceContentInput(0, props.setSideBar, () => props.setOnMeasureDistMode(false)), true)}}>Measure Distance</p>
       <p onClick={() => {let viewHeight = 1250.726;
                          window.open('https://earth.google.com/web/@' + props.coordinates.lat + ',' + props.coordinates.lng + ',' +viewHeight + 'a,666.616d,35y,0h,45t,0r', '_blank');}}>
                          View Google Earth Here</p>

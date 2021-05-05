@@ -4,12 +4,13 @@ import ClickMenu from '../components/ClickMenu/ClickMenu.js';
 import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 import SurfSpotContentInput from "../components/Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
+import DistanceContentInput from "../components/Sidebar/SidebarContent/DistanceContent/DistanceContentInput.js"
 
 import Marker from "./Marker.js"
 import { API } from "@aws-amplify/api";
 import { Auth} from 'aws-amplify';
 import { getUser } from "../src/graphql/queries";
-import { mod, coordinatesAreEqual } from "../functions/Math.js"
+import { mod, coordinatesAreEqual, getCoordinateDist} from "../functions/Math.js"
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
@@ -22,7 +23,6 @@ let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
 let map = null
-let measureDistPoints = []
 
 //measure distance markers
 let measureDistMarkers = []
@@ -127,7 +127,6 @@ function renderClickMenuPlaceHolder(isLoggedIn, coordinates) {
     isLoggedIn={isLoggedIn}
     updateMapMarker={(title, description) => updateMapMarker(coordinates, title, description)}
     closePopup={closePopup}
-    measureDistPoints={measureDistPoints}
     setOnMeasureDistMode={setOnMeasureDistMode}
     coordinates={coordinates}
     removeMapMarker={() => removeMapMarker(coordinates)}
@@ -175,20 +174,22 @@ let mapClickFunc = (e, isLoggedIn) => {
                                                                   .setLngLat(coordinates)
                                                                   .addTo(map);
                             measureDistMarkers.push(new Marker(e.lngLat, newMapBoxMarker))
-                            measureDistPoints.push(e.lngLat);
                          }
                          else if(measureDistMarkers.length == 2 &&
                                  measureDistMarkers[1].mapBoxMarkerObj.getLngLat().lat != e.lngLat.lat &&
                                  measureDistMarkers[1].mapBoxMarkerObj.getLngLat().lng != e.lngLat.lng){
                            measureDistMarkers[0].mapBoxMarkerObj.remove();
                            measureDistMarkers[0] = measureDistMarkers[1];
-                           measureDistPoints[0] = measureDistPoints[1];
                            let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
                                                                                              .setLngLat(coordinates)
                                                                                              .addTo(map);
                            measureDistMarkers[1] = new Marker(e.lngLat, newMapBoxMarker)
-                           measureDistPoints[1] = e.lngLat;
                          }
+                         let pointsDistance = 0;
+                         if(measureDistMarkers.length == 2) {
+                            pointsDistance = getCoordinateDist(measureDistMarkers[0].mapBoxMarkerObj.getLngLat(), measureDistMarkers[1].mapBoxMarkerObj.getLngLat())
+                         }
+                         setSideBar(new DistanceContentInput(pointsDistance, setSideBar, () => setOnMeasureDistMode(false)), true)
                        }
                        else {
                          closePopup();
