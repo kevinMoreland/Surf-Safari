@@ -46,7 +46,7 @@ function getDistanceBetweenCoords(coord1, coord2) {
     latitude: coord2.lat,
     longitude: coord2.lng
   }
-  dist = haversine(start, end, {unit: 'meter'})
+  dist = haversine(start, end, {unit: 'mile'})
   return dist
 }
 
