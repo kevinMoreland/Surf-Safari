@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/latestobs",
+            "lambdaFunction": "getlatestobs",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/latestobs"
+        }
+    ],
+    "resourceName": "latestBuoyObsAPI",
+    "apiName": "latestBuoyObsAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "getlatestobs"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-surfsafari-dev-210839-authRole",
+        "unAuthRoleName": "amplify-surfsafari-dev-210839-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "getlatestobs",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

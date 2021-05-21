@@ -18,8 +18,8 @@ export default function DayCast(props) {
 
           </div>
           <div style={{width: "50%"}}>
-            <Typography variant="h5">High: {props.weather.lo}°C</Typography>
-            <Typography variant="h5">Low: {props.weather.hi}°C</Typography>
+            <Typography variant="h5">High: {props.weather.hi}°F</Typography>
+            <Typography variant="h5">Low: {props.weather.lo}°F</Typography>
           </div>
 
         </div>

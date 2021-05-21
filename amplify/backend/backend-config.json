@@ -58,10 +58,29 @@
           ]
         }
       ]
+    },
+    "latestBuoyObsAPI": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "getlatestobs",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "function": {
     "forecastlambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getlatestobs": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"

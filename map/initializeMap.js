@@ -11,6 +11,7 @@ import { API } from "@aws-amplify/api";
 import { Auth} from 'aws-amplify';
 import { getUser } from "../src/graphql/queries";
 import { mod, coordinatesAreEqual, getCoordinateDist} from "../functions/Math.js"
+import { getLatestBuoyData } from "../functions/LatestBuoyDataGetter.js"
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
