@@ -9,7 +9,7 @@ import { mod, coordinatesAreEqual } from "../../../../functions/Math.js"
 import { getBuoy } from "../../../../functions/BuoyGetter.js"
 import { getForecast } from "../../../../functions/ForecastGetter.js"
 
-import BuoyContentInput from "../BuoyContent/BuoyContentInput.js"
+import NearestBuoyContentInput from "../NearestBuoyContent/NearestBuoyContentInput.js"
 import ForecastContentInput from "../ForecastContent/ForecastContentInput.js"
 
 import { useState, useEffect } from "react";
@@ -147,8 +147,8 @@ export default function SurfSpotContent(props) {
           rowsMax={20}/>
         <div className={styles.buttons}>
           <Button onClick={()=>{
-            props.content.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true)
-            getBuoy(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
+            props.content.setSideBar(new NearestBuoyContentInput(-1, -1, -1, -1, -1), true)
+            getBuoy(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new NearestBuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
                     }} variant="contained" color="primary">Get Buoy Data</Button>
           <Button onClick={()=>{
             props.content.setSideBar(new ForecastContentInput(null), true)

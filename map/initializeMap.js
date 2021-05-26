@@ -12,6 +12,7 @@ import { Auth} from 'aws-amplify';
 import { getUser } from "../src/graphql/queries";
 import { mod, coordinatesAreEqual, getCoordinateDist} from "../functions/Math.js"
 import { getLatestBuoyData } from "../functions/LatestBuoyDataGetter.js"
+//example usage:    getLatestBuoyData().then((data) => ...)
 const mapContainerDivName = "my-map"
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
@@ -80,6 +81,43 @@ function updateMapMarker(coordinates, title, description) {
   console.log(markers)
 }
 
+function addBuoyMarker(buoyData) {
+  console.log(buoyData);
+  let newMapBoxMarker = new mapboxgl.Marker({color: "#000000", draggable: false})
+                                      .setLngLat({lng: buoyData.lon, lat: buoyData.lat})
+                                      .addTo(map);
+  let markerel = newMapBoxMarker.getElement()
+  markerel.addEventListener('click', (e) => {
+    let markerIndex = getMarkerIndex(coordinates)
+        let surfSpotTitle = ""
+        let surfSpotDesc = ""
+        if(markerIndex != -1) {
+          surfSpotTitle = markers[markerIndex].title
+          surfSpotDesc = markers[markerIndex].description
+        }
+        let sideBarContent = new SurfSpotContentInput(surfSpotTitle,
+                                                  surfSpotDesc,
+                                                  (title, description) => updateMapMarker(coordinates, title, description),
+                                                  () => removeMapMarker(coordinates),
+                                                  setSideBar,
+                                                  coordinates.lng,
+                                                  coordinates.lat)
+        setSideBar(sideBarContent, true);
+        map.easeTo({center: coordinates});
+
+        //prevent the click event from firing anywhere else
+        e.stopPropagation();
+  })
+}
+function addBuoyMarkers() {
+  //TODO loop through each object in json result, run addBuoyMarker for each to add to map
+  getLatestBuoyData().then((data) =>
+  {
+    for(let i = 0; i < data.length; i ++) {
+      addBuoyMarker(data[i]);
+    }
+  });
+}
 function addMapMarker(coordinates) {
   //This ONLY adds to the UI. Seperately, add to the DB
   //ensure we don't add too markers directly on top of one another
@@ -369,6 +407,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
   if(isLoggedIn) {
     fillAllMarkersFromCloud();
   }
+  addBuoyMarkers();
 
   //save these function and objects in this class so I can use them for later
   setSideBar = setSideBarInput

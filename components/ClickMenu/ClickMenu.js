@@ -2,7 +2,7 @@ import styles from './ClickMenu.module.css'
 import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SurfSpotContentInput from "../Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import ForecastContentInput from "../Sidebar/SidebarContent/ForecastContent/ForecastContentInput.js"
-import BuoyContentInput from "../Sidebar/SidebarContent/BuoyContent/BuoyContentInput.js"
+import NearestBuoyContentInput from "../Sidebar/SidebarContent/NearestBuoyContent/NearestBuoyContentInput.js"
 import DistanceContentInput from "../Sidebar/SidebarContent/DistanceContent/DistanceContentInput.js"
 import SatteliteContentInput from "../FullScreenDialog/SatelliteContent/SatelliteContentInput.js"
 import { getBuoy } from '../../functions/BuoyGetter.js'

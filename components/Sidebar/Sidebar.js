@@ -7,7 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import contentTypes from './contentTypes.js'
 import SurfSpotContent from './SidebarContent/SurfSpotContent/SurfSpotContent.js'
 import ForecastContent from './SidebarContent/ForecastContent/ForecastContent.js'
-import BuoyContent from './SidebarContent/BuoyContent/BuoyContent.js'
+import NearestBuoyContent from './SidebarContent/NearestBuoyContent/NearestBuoyContent.js'
 import DistanceContent from './SidebarContent/DistanceContent/DistanceContent.js'
 
 import 'fontsource-roboto';
@@ -23,7 +23,7 @@ export default function Sidebar(props) {
     content = <ForecastContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.BUOY) {
-    content = <BuoyContent content={props.content}/>
+    content = <NearestBuoyContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.DISTANCE) {
     content = <DistanceContent content={props.content}/>
