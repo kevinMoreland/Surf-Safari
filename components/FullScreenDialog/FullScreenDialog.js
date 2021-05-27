@@ -6,6 +6,7 @@ import fullscreenDialogContentTypes from '../FullScreenDialog/contentTypes.js'
 import SatelliteContent from './SatelliteContent/SatelliteContent.js'
 import LoginContent from './LoginContent/LoginContent.js'
 import CreateAccountContent from './CreateAccountContent/CreateAccountContent.js'
+import HelpContent from './HelpContent/HelpContent.js'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -23,6 +24,9 @@ export default function FullScreenDialog(props) {
   }
   else if(props.content.contentType == fullscreenDialogContentTypes.CREATE_ACCOUNT) {
     content = <CreateAccountContent handleClose={props.handleClose}/>
+  }
+  else if(props.content.contentType == fullscreenDialogContentTypes.HELP) {
+    content = <HelpContent handleClose={props.handleClose}/>
   }
   return (
     <div>

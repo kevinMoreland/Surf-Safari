@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import Sidebar from "../components/Sidebar/Sidebar.js"
 
 import LoginContentInput from "../components/FullScreenDialog/LoginContent/LoginContentInput.js"
+import HelpContentInput from "../components/FullScreenDialog/HelpContent/HelpContentInput.js"
 import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js"
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
@@ -126,8 +127,8 @@ export default function Home() {
         </main>
 
         <div className={styles.profileIconContainer}>
-          <HelpButton handleClick={() => {console.log("help is on the way")}}/>
-          <ProfileButton className={styles.iconContainer} handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
+          <HelpButton handleClick={() => setFullScreenDialogInfo({content: new HelpContentInput(), isActive: true})}/>
+          <ProfileButton handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
         </div>
         <div className={styles.miniMapContainer}>
           <FormGroup className={styles.buoyToggleContainer}>
