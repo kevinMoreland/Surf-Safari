@@ -21,11 +21,15 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2V2aW5tb3JlbGFuZCIsImEiOiJja2hyMWRwczMwcWRqM
 const sourceName = 'surfspotsMarkers'
 const layerId = 'surfspotsLayer'
 
-//consists of Marker objects from ./Marker.js
+//consists of Marker objects from ./Marker.js for user's surf spots
 let markers = []
 let setSideBar = () => console.error("initializeMap.js: setSideBar() uninitialized")
 let setFullScreenDialog = () => console.error("initializeMap.js: setFullScreenDialog() uninitialized")
 let map = null
+
+//consists of an array with buoy data
+let allBuoyData = null
+let buoyMarkers = []
 
 //measure distance markers
 let measureDistMarkers = []
@@ -82,10 +86,27 @@ function updateMapMarker(coordinates, title, description) {
   console.log(markers)
 }
 
+//load and populate buoy markers
+function loadBuoyData() {
+  getLatestBuoyData().then((data) =>
+  {
+    allBuoyData = data;
+    populateBuoyMarkers();
+  });
+}
+
+//clear all buoy markers
+function clearBuoyMarkers() {
+  for(let i = 0; i < buoyMarkers.length; i ++) {
+    buoyMarkers[i].mapBoxMarkerObj.remove();
+  }
+  buoyMarkers = []
+}
+
 function addBuoyMarker(buoyData) {
-  console.log(buoyData);
+  let coordinates = {lat: buoyData.lat, lng: buoyData.lon};
   let newMapBoxMarker = new mapboxgl.Marker({color: "#000000", draggable: false})
-                                      .setLngLat({lng: buoyData.lon, lat: buoyData.lat})
+                                      .setLngLat(coordinates)
                                       .addTo(map);
   let markerel = newMapBoxMarker.getElement()
   markerel.addEventListener('click', (e) => {
@@ -95,20 +116,21 @@ function addBuoyMarker(buoyData) {
                                                   buoyData.period,
                                                   buoyData.waveDir)
         setSideBar(sideBarContent, true);
-        map.easeTo({center: {lat: buoyData.lat, lng: buoyData.lon}});
+        map.easeTo({center: coordinates});
 
         //prevent the click event from firing anywhere else
         e.stopPropagation();
   })
+  buoyMarkers.push(new Marker(coordinates, newMapBoxMarker));
 }
-function addBuoyMarkers() {
+
+function populateBuoyMarkers() {
   //TODO loop through each object in json result, run addBuoyMarker for each to add to map
-  getLatestBuoyData().then((data) =>
-  {
-    for(let i = 0; i < data.length; i ++) {
-      addBuoyMarker(data[i]);
+  if(allBuoyData != null) {
+    for(let i = 0; i < allBuoyData.length; i ++) {
+      addBuoyMarker(allBuoyData[i]);
     }
-  });
+  }
 }
 function addMapMarker(coordinates) {
   //This ONLY adds to the UI. Seperately, add to the DB
@@ -399,7 +421,8 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
   if(isLoggedIn) {
     fillAllMarkersFromCloud();
   }
-  addBuoyMarkers();
+  //loads and populate all the buoy markers
+  loadBuoyData();
 
   //save these function and objects in this class so I can use them for later
   setSideBar = setSideBarInput
@@ -436,7 +459,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
      'top-left'
    );
   //current location control
-  map.addControl(
+  /*map.addControl(
    new mapboxgl.GeolocateControl({
      positionOptions: {
        enableHighAccuracy: true,
@@ -444,7 +467,7 @@ function initializeMap(containerName, mapStyle, isLoggedIn, setSideBarInput, set
      trackUserLocation: true,
    }),
    'top-left'
-  );
+  );*/
   //zoom and rotation controls
   map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 }
@@ -456,4 +479,6 @@ module.exports = {
   mapContainerDivName,
   clearMapMarkers,
   fillAllMarkersFromCloud,
+  clearBuoyMarkers,
+  populateBuoyMarkers
 }

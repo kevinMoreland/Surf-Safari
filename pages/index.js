@@ -8,7 +8,7 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
-import { initializeMap, clearMapMarkers, fillAllMarkersFromCloud, changeMapStyle, updateMapOnLogInChange, mapContainerDivName } from "../map/initializeMap";
+import { initializeMap, clearMapMarkers, fillAllMarkersFromCloud, changeMapStyle, updateMapOnLogInChange, mapContainerDivName, clearBuoyMarkers, populateBuoyMarkers } from "../map/initializeMap";
 import { mapModes, availableMaps } from "../map/mapModes";
 
 import Switch from '@material-ui/core/Switch';
@@ -31,10 +31,21 @@ export default function Home() {
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({content: {}, isActive: false});
   const [authState, setAuthState] = useState();
 
-  //for toggling if buoys displayed
-  const [showBuoysChecked, setShowBuoysChecked] = useState(false);
+  //for toggling if buoys displayed. 'true' because initially buoys are populated
+  const [showBuoysChecked, setShowBuoysChecked] = useState(true);
   const toggleShowBuoysChecked = () => {
-    setShowBuoysChecked((prev) => !prev);
+    console.log(showBuoysChecked)
+    setShowBuoysChecked((prev) => {
+      let settingToShow = !prev;
+      if(settingToShow) {
+        populateBuoyMarkers();
+      }
+      else {
+        clearBuoyMarkers();
+      }
+      return settingToShow}
+    );
+
   };
 
   //When page first loads, set page mounted to true and initialize map
