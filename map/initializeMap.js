@@ -5,6 +5,7 @@ import jsxToString from 'jsx-to-string';
 import contentTypes from '../components/Sidebar/contentTypes.js'
 import SurfSpotContentInput from "../components/Sidebar/SidebarContent/SurfSpotContent/SurfSpotContentInput.js"
 import DistanceContentInput from "../components/Sidebar/SidebarContent/DistanceContent/DistanceContentInput.js"
+import BuoyContentInput from "../components/Sidebar/SidebarContent/BuoyContent/BuoyContentInput.js"
 
 import Marker from "./Marker.js"
 import { API } from "@aws-amplify/api";
@@ -88,22 +89,13 @@ function addBuoyMarker(buoyData) {
                                       .addTo(map);
   let markerel = newMapBoxMarker.getElement()
   markerel.addEventListener('click', (e) => {
-    let markerIndex = getMarkerIndex(coordinates)
-        let surfSpotTitle = ""
-        let surfSpotDesc = ""
-        if(markerIndex != -1) {
-          surfSpotTitle = markers[markerIndex].title
-          surfSpotDesc = markers[markerIndex].description
-        }
-        let sideBarContent = new SurfSpotContentInput(surfSpotTitle,
-                                                  surfSpotDesc,
-                                                  (title, description) => updateMapMarker(coordinates, title, description),
-                                                  () => removeMapMarker(coordinates),
-                                                  setSideBar,
-                                                  coordinates.lng,
-                                                  coordinates.lat)
+
+        let sideBarContent = new BuoyContentInput(buoyData.stationId,
+                                                  buoyData.waveHeight,
+                                                  buoyData.period,
+                                                  buoyData.waveDir)
         setSideBar(sideBarContent, true);
-        map.easeTo({center: coordinates});
+        map.easeTo({center: {lat: buoyData.lat, lng: buoyData.lon}});
 
         //prevent the click event from firing anywhere else
         e.stopPropagation();

@@ -8,6 +8,7 @@ import contentTypes from './contentTypes.js'
 import SurfSpotContent from './SidebarContent/SurfSpotContent/SurfSpotContent.js'
 import ForecastContent from './SidebarContent/ForecastContent/ForecastContent.js'
 import NearestBuoyContent from './SidebarContent/NearestBuoyContent/NearestBuoyContent.js'
+import BuoyContent from './SidebarContent/BuoyContent/BuoyContent.js'
 import DistanceContent from './SidebarContent/DistanceContent/DistanceContent.js'
 
 import 'fontsource-roboto';
@@ -23,7 +24,10 @@ export default function Sidebar(props) {
     content = <ForecastContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.BUOY) {
-    content = <NearestBuoyContent content={props.content}/>
+    content = <BuoyContent content={props.content}/>
+  }
+  else if(props.content.contentType == contentTypes.NEAREST_BUOY) {
+      content = <NearestBuoyContent content={props.content}/>
   }
   else if(props.content.contentType == contentTypes.DISTANCE) {
     content = <DistanceContent content={props.content}/>
