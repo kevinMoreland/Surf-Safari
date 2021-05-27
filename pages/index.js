@@ -108,7 +108,6 @@ export default function Home() {
         </div>
         <div className={styles.miniMapContainer}>
           <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={0} availableMaps={availableMaps}/>
-          <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={1} availableMaps={availableMaps}/>
         </div>
       </div>
     </div>
