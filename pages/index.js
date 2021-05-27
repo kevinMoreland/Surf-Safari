@@ -11,6 +11,10 @@ import ProfileButton from '../components/ProfileButton/ProfileButton.js'
 import { initializeMap, clearMapMarkers, fillAllMarkersFromCloud, changeMapStyle, updateMapOnLogInChange, mapContainerDivName } from "../map/initializeMap";
 import { mapModes, availableMaps } from "../map/mapModes";
 
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import { fetcher } from "../utilities/fetcher";
 import 'fontsource-roboto';
 //Necessary for AWS Cognito for sign up/ sign in ------
@@ -26,6 +30,12 @@ export default function Home() {
   const [sideBarInfo, setSideBarInfo] = useState({content: {}, isActive: false});
   const [fullScreenDialogInfo, setFullScreenDialogInfo] = useState({content: {}, isActive: false});
   const [authState, setAuthState] = useState();
+
+  //for toggling if buoys displayed
+  const [showBuoysChecked, setShowBuoysChecked] = useState(false);
+  const toggleShowBuoysChecked = () => {
+    setShowBuoysChecked((prev) => !prev);
+  };
 
   //When page first loads, set page mounted to true and initialize map
   useEffect(() => {
@@ -107,6 +117,13 @@ export default function Home() {
           <ProfileButton handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
         </div>
         <div className={styles.miniMapContainer}>
+          <FormGroup className={styles.buoyToggleContainer}>
+            <FormControlLabel
+              control={<Switch checked={showBuoysChecked} onChange={toggleShowBuoysChecked} color="secondary"/>}
+              label="Buoys"
+              labelPlacement="end"
+            />
+          </FormGroup>
           <MiniMapButton clickAction={toggleMap} currentMap={mapStyle} miniMapIndex={0} availableMaps={availableMaps}/>
         </div>
       </div>
