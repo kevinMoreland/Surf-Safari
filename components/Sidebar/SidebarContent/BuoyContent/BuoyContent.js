@@ -10,7 +10,7 @@ export default function BuoyContent(props) {
               <Typography variant="h4">Buoy {props.content.stationId} Data</Typography>
               <br />
               <Link target="_blank" href={props.content.linkToStation}>Buoy {props.content.stationId} (Click for details)</Link>
-              <Typography variant="body1">Swell Height: {props.content.waveHeight=="MM" ? unkownForBuoyMessage: props.content.waveHeight} meters</Typography>
+              <Typography variant="body1">Swell Height: {props.content.waveHeight=="MM" ? unkownForBuoyMessage: props.content.waveHeight} feet</Typography>
               <Typography variant="body1">Period: {props.content.period=="MM" ? unkownForBuoyMessage:props.content.period} seconds</Typography>
 
               <div style={{display:"flex", alignItems: "center"}}>

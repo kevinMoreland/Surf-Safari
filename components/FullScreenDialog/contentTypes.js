@@ -1,1 +1,1 @@
-export default {LOGIN: "login", CREATE_ACCOUNT: "create account", SATELLITE: "satellite"}
+export default {LOGIN: "login", HELP: "help", CREATE_ACCOUNT: "create account", SATELLITE: "satellite"}

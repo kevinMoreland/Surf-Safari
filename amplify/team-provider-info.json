@@ -28,7 +28,7 @@
         },
         "getlatestobs": {
           "deploymentBucketName": "amplify-surfsafari-dev-210839-deployment",
-          "s3Key": "amplify-builds/getlatestobs-53735a61384257646d54-build.zip"
+          "s3Key": "amplify-builds/getlatestobs-506b4773374133312f42-build.zip"
         }
       }
     }

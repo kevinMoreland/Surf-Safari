@@ -84,8 +84,11 @@ function getStationJSONData() {
           }
         }
         if(res[i] == '\n') {
+          let waveHeight = colValues[11]
+          if(waveHeight != "MM" && lineNum > 1) {
+            //convert wave height to feet from meters
+            waveHeight = (waveHeight * 3.28).toFixed(1);
 
-          if(colValues[11] != "MM" && lineNum > 1) {          
             allStationData.push(new stationData(colValues[0], colValues[1], colValues[2], 
                                                 colValues[3], colValues[4], colValues[5], 
                                                 colValues[6], colValues[7], colValues[11], 
