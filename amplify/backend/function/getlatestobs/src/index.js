@@ -91,7 +91,7 @@ function getStationJSONData() {
 
             allStationData.push(new stationData(colValues[0], colValues[1], colValues[2], 
                                                 colValues[3], colValues[4], colValues[5], 
-                                                colValues[6], colValues[7], colValues[11], 
+                                                colValues[6], colValues[7], waveHeight,
                                                 colValues[12], colValues[14]));
           }
           colValues = [];
