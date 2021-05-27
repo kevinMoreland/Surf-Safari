@@ -223,7 +223,7 @@ let mapClickFunc = (e, isLoggedIn) => {
                             (measureDistMarkers.length == 1 &&
                             measureDistMarkers[0].mapBoxMarkerObj.getLngLat().lat != e.lngLat.lat &&
                             measureDistMarkers[0].mapBoxMarkerObj.getLngLat().lng != e.lngLat.lng)) {
-                            let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
+                            let newMapBoxMarker = new mapboxgl.Marker({color: "#FFFFFF", draggable: false})
                                                                   .setLngLat(coordinates)
                                                                   .addTo(map);
                             measureDistMarkers.push(new Marker(e.lngLat, newMapBoxMarker))
@@ -233,7 +233,7 @@ let mapClickFunc = (e, isLoggedIn) => {
                                  measureDistMarkers[1].mapBoxMarkerObj.getLngLat().lng != e.lngLat.lng){
                            measureDistMarkers[0].mapBoxMarkerObj.remove();
                            measureDistMarkers[0] = measureDistMarkers[1];
-                           let newMapBoxMarker = new mapboxgl.Marker({color: "#030303", draggable: false})
+                           let newMapBoxMarker = new mapboxgl.Marker({color: "#FFFFFF", draggable: false})
                                                                                              .setLngLat(coordinates)
                                                                                              .addTo(map);
                            measureDistMarkers[1] = new Marker(e.lngLat, newMapBoxMarker)

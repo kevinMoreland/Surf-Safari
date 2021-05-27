@@ -19,6 +19,7 @@
   right: 3vw;
   top: 3vh;
 }
+
 .miniMapContainer {
   position: absolute;
   z-index: 1;

@@ -8,6 +8,8 @@ import FullScreenDialog from "../components/FullScreenDialog/FullScreenDialog.js
 import MiniMapButton from "../components/MiniMapButton/MiniMapButton.js"
 import fullScreenDialogContentTypes from '../components/FullScreenDialog/contentTypes.js'
 import ProfileButton from '../components/ProfileButton/ProfileButton.js'
+import HelpButton from '../components/HelpButton/HelpButton.js'
+
 import { initializeMap, clearMapMarkers, fillAllMarkersFromCloud, changeMapStyle, updateMapOnLogInChange, mapContainerDivName, clearBuoyMarkers, populateBuoyMarkers } from "../map/initializeMap";
 import { mapModes, availableMaps } from "../map/mapModes";
 
@@ -124,7 +126,8 @@ export default function Home() {
         </main>
 
         <div className={styles.profileIconContainer}>
-          <ProfileButton handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
+          <HelpButton handleClick={() => {console.log("help is on the way")}}/>
+          <ProfileButton className={styles.iconContainer} handleClick={() => setFullScreenDialogInfo({content: new LoginContentInput(), isActive: true})}/>
         </div>
         <div className={styles.miniMapContainer}>
           <FormGroup className={styles.buoyToggleContainer}>
