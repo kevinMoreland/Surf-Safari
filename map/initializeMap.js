@@ -105,7 +105,7 @@ function clearBuoyMarkers() {
 
 function addBuoyMarker(buoyData) {
   let coordinates = {lat: buoyData.lat, lng: buoyData.lon};
-  let newMapBoxMarker = new mapboxgl.Marker({color: "#000000", draggable: false})
+  let newMapBoxMarker = new mapboxgl.Marker({color: "#38CAFF", draggable: false})
                                       .setLngLat(coordinates)
                                       .addTo(map);
   let markerel = newMapBoxMarker.getElement()

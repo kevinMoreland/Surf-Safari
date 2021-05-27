@@ -34,7 +34,6 @@ export default function Home() {
   //for toggling if buoys displayed. 'true' because initially buoys are populated
   const [showBuoysChecked, setShowBuoysChecked] = useState(true);
   const toggleShowBuoysChecked = () => {
-    console.log(showBuoysChecked)
     setShowBuoysChecked((prev) => {
       let settingToShow = !prev;
       if(settingToShow) {
