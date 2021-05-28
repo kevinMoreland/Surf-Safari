@@ -99,7 +99,7 @@ export default function Home() {
   //TODO: on start, get browser data to see if login saved. Login user if so, go straight to map
     <div>
       <Head>
-        <title>Create Next App</title>
+        <title>Surf Safari</title>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
         <link
           rel="stylesheet"
