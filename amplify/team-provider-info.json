@@ -24,7 +24,7 @@
       "function": {
         "forecastlambda": {
           "deploymentBucketName": "amplify-surfsafari-dev-210839-deployment",
-          "s3Key": "amplify-builds/forecastlambda-66515570346e73376e6d-build.zip"
+          "s3Key": "amplify-builds/forecastlambda-5a393955714658665450-build.zip"
         },
         "getlatestobs": {
           "deploymentBucketName": "amplify-surfsafari-dev-210839-deployment",

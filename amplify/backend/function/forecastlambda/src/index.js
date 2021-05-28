@@ -92,7 +92,7 @@ function parseBuoyData(buoyData, stationId, distance, coordinates) {
   //Obtain the most recent buoy data
   let mostRecentData = buoyData.substring(rowStart, rowEnd + 1).split(/[ ]+/);
   console.log(mostRecentData)
-  return new swellForecast(mostRecentData[waveHeightIndex],
+  return new swellForecast(mostRecentData[waveHeightIndex] != "MM" ? (mostRecentData[waveHeightIndex] * 3.28).toFixed(1) : mostRecentData[waveHeightIndex],
                            mostRecentData[periodIndex],
                            mostRecentData[directionIndex],
                            stationId,

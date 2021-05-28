@@ -27,9 +27,9 @@ export default function ClickMenu(props) {
                          props.setSideBar(new ForecastContentInput(null), true)}}>
                          Get Weather Forecast</p>
       <p onClick={() => {props.closePopup();
-                         getBuoy(props.coordinates.lng, props.coordinates.lat).then((data) => props.setSideBar(new BuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
-                         props.setSideBar(new BuoyContentInput(-1, -1, -1, -1, -1), true);}}>
-                         Get Buoy Data</p>
+                         getBuoy(props.coordinates.lng, props.coordinates.lat).then((data) => props.setSideBar(new NearestBuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
+                         props.setSideBar(new NearestBuoyContentInput(-1, -1, -1, -1, -1), true);}}>
+                         Get Nearest Buoy Data</p>
       <p onClick={() => {props.closePopup();
                          props.setOnMeasureDistMode(true);
                          props.setSideBar(new DistanceContentInput(0, props.setSideBar, () => props.setOnMeasureDistMode(false)), true)}}>Measure Distance</p>

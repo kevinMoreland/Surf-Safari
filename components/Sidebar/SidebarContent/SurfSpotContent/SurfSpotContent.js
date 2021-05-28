@@ -133,7 +133,6 @@ export default function SurfSpotContent(props) {
           onChange={(e)=>{setTitleVal(e.target.value);}}
           multiline
           rowsMax={2}/>
-        <p style={{fontSize: 10}}>Longitude: {props.content.lng} Latitude: {props.content.lat}</p>
         <br/>
         <br/>
         <InputBase
@@ -149,11 +148,11 @@ export default function SurfSpotContent(props) {
           <Button onClick={()=>{
             props.content.setSideBar(new NearestBuoyContentInput(-1, -1, -1, -1, -1), true)
             getBuoy(props.content.lng, props.content.lat).then((data) => props.content.setSideBar(new NearestBuoyContentInput(data.stationId, data.waveHeight, data.period, data.direction, data.distance), true))
-                    }} variant="contained" color="primary">Get Buoy Data</Button>
+                    }} variant="contained" color="primary">Nearest Buoy Data</Button>
           <Button onClick={()=>{
             props.content.setSideBar(new ForecastContentInput(null), true)
             getForecast(props.content.lng, props.content.lat).then((data) => {console.log("HERE \n"); props.content.setSideBar(new ForecastContentInput(data), true)})
-                    }} variant="contained" color="primary">Get Forecast</Button>
+                    }} variant="contained" color="primary">Forecast</Button>
           <Button onClick={()=>{addSurfSpot(props.content.lng, props.content.lat, titleVal, descVal); props.content.updateMapMarker(titleVal, descVal);}} variant="contained" color="primary">Save</Button>
           <Button onClick={()=>{removeSurfSpot(props.content.lng, props.content.lat); props.content.removeMapMarker(); props.onClose();}} variant="contained" color="primary">Delete</Button>
         </div>
