@@ -58,6 +58,7 @@ export default function Home() {
                   authState == AuthState.SignedIn,
                   (a, b) => setSideBarInfo({content: a, isActive: b}),
                   (a, b) => setFullScreenDialogInfo({content: a, isActive: b}));
+    setFullScreenDialogInfo({content: new HelpContentInput(), isActive: true})
   }, []);
 
   //When page first loads, set auth state
@@ -70,6 +71,7 @@ export default function Home() {
       return onAuthUIStateChange((nextAuthState, authData) => {
           setAuthState(nextAuthState);
       });
+
   }, []);
 
   //update map content when status of login changes
