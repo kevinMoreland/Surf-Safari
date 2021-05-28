@@ -26,7 +26,7 @@ export default function HelpContent(props) {
             <Typography variant="body1">In order to save a surf spot, you must create an account and log in first. Accounts can be accessed from the top left corner of the website at the profile button.</Typography>
             <img style={{width: imageWidth, paddingTop: '1vh'}} src={"/profileLocation.PNG"}/>
             <Typography variant="body1">Once you are logged into your account, you can click the map and see the option to save a surf spot.</Typography>
-            <img style={{width: imageWidth, paddingTop: '1vh'}} src={"/SaveSurfSpotOption.PNG"}/>
+            <img style={{width: imageWidth, paddingTop: '1vh'}} src={"/saveSurfSpotOption.PNG"}/>
             <Typography variant="body1">When this option is clicked, a side bar will display where you can add a title and description to your discovered spot, and it will be saved for future reference!</Typography>
             <img style={{width: imageWidth, paddingTop: '1vh'}} src={"/saveSpotSidebar.PNG"}/>
 
